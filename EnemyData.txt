@@ -1,2 +1,4 @@
-1), Mudcrab, 20, 5
-2), Bandit, 35, 10
+1),Mudcrab,20,5
+2),Bandit,25,10
+3),Bear,100,45
+4),Dragon,1000,95
