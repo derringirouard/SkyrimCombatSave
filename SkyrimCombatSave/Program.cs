@@ -6,16 +6,7 @@ using System.Linq;
 
 namespace SkyrimCombat
 {
-    public class Enemy
-    {
-        public string Name { get; set; }
-        public string HP { get; set; }
-        public string Attack { get; set; }
-        public string ID { get; set; }
-
-
-
-    }
+    
     class Program
     {
        static int enemyAttacks(string enemyName, int playerHealth, int enemyAttack)
@@ -36,9 +27,11 @@ namespace SkyrimCombat
                 playerHealth -= enemyAttack;
                 Thread.Sleep(1000);
                 Console.Clear();
+                Console.WriteLine(playerHealth);
             }
             return playerHealth;
         }
+
         static void combatManager(string enemyID, string filePath, string characterFilePath, bool flee) //Method to initiate and handle combat until either player or enemy health reaches 0
         {
             List<string> playerInfo = new List<string>(); //Create list to hold player data
@@ -159,13 +152,22 @@ namespace SkyrimCombat
 
 
         }
+        
+        
+        
+        
+        
+        
+        
+        
+        
         static void Main(string[] args)
         {
             string savePoint = "0"; //Use this in a massive if/else if statement to track progress. Setting savepoint to that checkpoint value at the end of the previous chunk of code.
             string filePath = @"C:\Users\Traffic\source\repos\SkyrimCombatSave\EnemyData.txt"; //Set file path of enemy data
             string characterFilePath = @"C:\Users\Traffic\source\repos\SkyrimCombatSave\CharacterData.txt";
             string enemyID = "4)"; //Initialize variable to use to search EnemyData.txt for the enemy to battle
-            int playerHealth = 100; //Set initial player health
+            int playerHealth = 1000; //Set initial player health
             bool flee = false;
 
             List<string> enemySets = new List<string>(File.ReadAllLines(filePath)); //Create list of enemy data pulled from EnemyData.txt
