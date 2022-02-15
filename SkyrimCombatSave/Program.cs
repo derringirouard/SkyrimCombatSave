@@ -9,7 +9,7 @@ namespace SkyrimCombat
     
     class Program
     {
-       static int enemyAttacks(string enemyName, int playerHealth, int enemyAttack)
+       static int EnemyAttacks(string enemyName, int playerHealth, int enemyAttack)
         {
             Console.WriteLine("\nThe " + enemyName + " attacks!");
             Thread.Sleep(1000);
@@ -20,6 +20,7 @@ namespace SkyrimCombat
                 Console.WriteLine(enemyName + " misses!");
                 Thread.Sleep(1000);
                 Console.Clear();
+                return playerHealth;
             }
             else
             {
@@ -27,12 +28,14 @@ namespace SkyrimCombat
                 playerHealth -= enemyAttack;
                 Thread.Sleep(1000);
                 Console.Clear();
-                Console.WriteLine(playerHealth);
+                Console.WriteLine("This is player health:" + playerHealth);
+                return playerHealth;
             }
-            return playerHealth;
+
+            
         }
 
-        static void combatManager(string enemyID, string filePath, string characterFilePath, bool flee) //Method to initiate and handle combat until either player or enemy health reaches 0
+        static void CombatManager(string enemyID, string filePath, string characterFilePath, bool flee) //Method to initiate and handle combat until either player or enemy health reaches 0
         {
             List<string> playerInfo = new List<string>(); //Create list to hold player data
             foreach (string line in System.IO.File.ReadLines(characterFilePath)) //Goes through lines of player data
@@ -107,9 +110,10 @@ namespace SkyrimCombat
                     enemyHealth -= playerAttack;
                     Console.WriteLine("You attack the " + enemyName + " for " + playerAttack + " damage!");
                     Thread.Sleep(1000);
-
-                    enemyAttacks(enemyName, playerHealth, enemyAttack);
-
+                    if (enemyHealth > 0)
+                    {
+                        EnemyAttacks(enemyName, playerHealth, enemyAttack);
+                    }
 
                 }
                 else if (action == "2" || action == "flee")
@@ -122,7 +126,7 @@ namespace SkyrimCombat
                     {
                         Console.WriteLine("Failed to flee!");
                         Thread.Sleep(750);
-                        enemyAttacks(enemyName, playerHealth, enemyAttack);
+                        EnemyAttacks(enemyName, playerHealth, enemyAttack);
                     }
                     else
                     {
@@ -153,8 +157,27 @@ namespace SkyrimCombat
 
         }
         
+        static void Next()
+        {
+            Console.WriteLine("Press enter to continue");
+            Console.ReadKey();
+        }
         
-        
+        static void SaveGame(string savePoint, string characterFilePath, string playerName)
+        {
+            savePoint = "1";
+            Console.WriteLine("Would you like to save? (y/n)");
+            string action = Console.ReadLine().ToLower();
+            if (action == "y")
+            {
+                File.WriteAllText(characterFilePath, string.Empty);
+                List<string> list = new List<string>();
+                list.Add(playerName + ",100,15," + savePoint);
+                File.WriteAllLines(characterFilePath, list);
+                Console.WriteLine("Game saved!");
+                Next();
+            }
+        }
         
         
         
@@ -163,11 +186,9 @@ namespace SkyrimCombat
         
         static void Main(string[] args)
         {
-            string savePoint = "0"; //Use this in a massive if/else if statement to track progress. Setting savepoint to that checkpoint value at the end of the previous chunk of code.
             string filePath = @"C:\Users\Traffic\source\repos\SkyrimCombatSave\EnemyData.txt"; //Set file path of enemy data
             string characterFilePath = @"C:\Users\Traffic\source\repos\SkyrimCombatSave\CharacterData.txt";
             string enemyID = "1)"; //Initialize variable to use to search EnemyData.txt for the enemy to battle
-            int playerHealth = 1000; //Set initial player health
             bool flee = false;
             string action = string.Empty;
 
@@ -176,33 +197,23 @@ namespace SkyrimCombat
 
 
 
-           // static void getPlayerInfo(string filePath)
-            {
-                List<string> playerInfo = new List<string>();
-                foreach (string line in System.IO.File.ReadLines(filePath))
+           List<string> playerInfo = new List<string>();
+                foreach (string line in System.IO.File.ReadLines(characterFilePath))
                 {
                     playerInfo = line.Split(",").ToList();
                     
                 }
 
-
-                //playerInfo.ForEach(i => Console.WriteLine(i.ToString()));
-                //Console.WriteLine("Above is playerInfo from filePath read thing\n\n");
-
-                //Console.ReadKey();
                 string playerName = playerInfo[0];
                 string playerHealthString = playerInfo[1];
-               // int playerHealth = Convert.ToInt32(playerHealthString);
+                int playerHealth = Convert.ToInt32(playerHealthString);
                 string playerAttackString = playerInfo[2];
                 int playerAttack = Convert.ToInt32(playerAttackString);
-                string playerSave = playerInfo[3];
+                string savePoint = playerInfo[3];
 
-            }
+            
 
 
-            Console.WriteLine("                                     A Title by Snoopert                                  ");
-
-            Thread.Sleep(1500);
             Console.WriteLine("        ....            ..       ..    ..        ..   .......     ..  ...              ...");
             Thread.Sleep(250);
             Console.WriteLine("     ...     ...        ..      ..      ..      ..    ..     ..   ..  ....            ....");
@@ -224,15 +235,16 @@ namespace SkyrimCombat
             Console.WriteLine("     ...    ...         ..       ..         ..        ..     ..   ..  ..                ..");
             Thread.Sleep(250);
             Console.WriteLine("         ...            ..       ..         ..        ..      ..  ..  ..                ..");
-            Thread.Sleep(750);
             Console.WriteLine("\n                                      A Text Adventure");
-            
+            Console.WriteLine("\n                                     A Title by Snoopert                                  ");
+
 
             Console.WriteLine("\nWhat do you want to do?");
             Console.WriteLine("\n\n\n1) Start New Game");
             Console.WriteLine("2) Continue");
             action = Console.ReadLine();
 
+            
             if (action == "1")
             {
                 Console.Clear();
@@ -240,82 +252,113 @@ namespace SkyrimCombat
                 string characterName = Console.ReadLine();
                 File.WriteAllText(characterFilePath, string.Empty);
                 List<string> list = new List<string>();
-                list.Add(characterName);
-                list.Add(",100");
-                list.Add(",15");
-                list.Add(",0");
+                list.Add(characterName + ",100,15,0");
                 File.WriteAllLines(characterFilePath, list);
-                Console.Clear();
-            }else if(action == "2")
-            {
-                Console.WriteLine("Returning to your place in Skyrim");
-                Thread.Sleep(250);
-                Console.Write(".");
-                Thread.Sleep(250);
-                Console.Write(".");
-                Thread.Sleep(250);
-                Console.Write(".");
-            }
-
-            Console.WriteLine("You step out of a cave entrance onto the top of a mountain. A dragon flies overhead toward the east and a path lays before you heading north. What do you do?");
-            Console.WriteLine("\n\n\n1) Follow the path.");
-            Console.WriteLine("2) Engage the dragon.");
-            Console.WriteLine("3) Try to take a shortcut down the east side of the mountain.");
-            action = Console.ReadLine().ToLower();
-
-            if (action == "1" || action == "path")
-            {
-                Console.WriteLine("You walk down the path. Admiring the blooming flowers and greenery. You hear rustling in the distance.");
-            }else if(action == "2")
-            {
-                enemyID = "Dragon";
-                combatManager(enemyID, filePath, characterFilePath, flee);
-            }else if(action == "3")
-            {
-                Console.Clear();
-                Console.WriteLine("You attempt to make your way down the rough terrain. After hopping over a few rocks and tripping in some \nbrush, you tumble a few dozen feet onto a familiar path taking 5 damage.");
-                playerHealth -= 5;
-                Console.WriteLine(playerHealth);
-                Console.ReadKey();
-            }
-
-            Console.Clear();
-            Console.WriteLine("A wolf is approaching quickly from the side of the path. There aren't many good places to hide. What do you do?");
-            Console.WriteLine("\n\n\n1) Attempt to hide anyway.");
-            Console.WriteLine("2) Try to get the first hit on it.");
-            Console.WriteLine("3) Cut off of the path and try to get down the mountain.");
-            action = Console.ReadLine().ToLower();
-
-            if (action == "1" || action == "path")
-            {
-
-                Console.WriteLine("You attempt to hide.");
-                Random fleeAttempt = new Random();
-                int thisRoll = fleeAttempt.Next(0, 10);
-                if (thisRoll == 0)
+                foreach (string line in System.IO.File.ReadLines(characterFilePath))
                 {
-                    Console.WriteLine("Failed to hide!");
-                    Thread.Sleep(750);
+                    playerInfo = line.Split(",").ToList();
+
+                }
+
+                playerName = playerInfo[0];
+                savePoint = playerInfo[3];
+                Console.Clear();
+            }else if(action == "2")
+            {
+                Console.Write("Returning to your place in Skyrim");
+                Thread.Sleep(750);
+                Console.Write(".");
+                Thread.Sleep(750);
+                Console.Write(".");
+                Thread.Sleep(750);
+                Console.Write(".");
+                foreach (string line in System.IO.File.ReadLines(characterFilePath))
+                {
+                    playerInfo = line.Split(",").ToList();
+
+                }
+                Console.Clear();
+            }
+            
+            
+            if (savePoint == "0")
+            {
+
+
+                Console.WriteLine("You step out of a cave entrance onto the top of a mountain. A dragon flies overhead toward the east \nand a path lays before you heading north. What do you do?");
+                Console.WriteLine("\n\n\n1) Follow the path.");
+                Console.WriteLine("2) Engage the dragon.");
+                Console.WriteLine("3) Try to take a shortcut down the east side of the mountain.");
+                action = Console.ReadLine().ToLower();
+
+                if (action == "1" || action == "path")
+                {
+                    Console.WriteLine("You walk down the path. Admiring the blooming flowers and greenery. You hear rustling in the distance.");
+
+
+                }
+                else if (action == "2")
+                {
+                    enemyID = "Dragon";
+                    CombatManager(enemyID, filePath, characterFilePath, flee);
+                }
+                else if (action == "3")
+                {
+                    Console.Clear();
+                    Console.WriteLine("You attempt to make your way down the rough terrain. After hopping over a few rocks and tripping in some \nbrush, you tumble a few dozen feet onto a familiar path taking 5 damage.");
+                    playerHealth -= 5;
+                    Console.WriteLine("Current HP: " + playerHealth);
+                    Next();
+                }
+
+                Console.Clear();
+                Console.WriteLine("A wolf is approaching quickly from the side of the path. There aren't many good places to hide. What do you do?");
+                Console.WriteLine("\n\n\n1) Attempt to hide anyway.");
+                Console.WriteLine("2) Try to get the first hit on it.");
+                Console.WriteLine("3) Cut off of the path and try to get down the mountain.");
+                action = Console.ReadLine().ToLower();
+
+                if (action == "1" || action == "path")
+                {
+
+                    Console.WriteLine("You attempt to hide.");
+                    Thread.Sleep(1500);
+                    Random fleeAttempt = new Random();
+                    int thisRoll = fleeAttempt.Next(0, 10);
+                    if (thisRoll < 9)
+                    {
+                        Console.WriteLine("Failed to hide!");
+                        Thread.Sleep(1000);
+                        enemyID = "Wolf";
+                        CombatManager(enemyID, filePath, characterFilePath, flee);
+
+                    }
+                    else
+                    {
+                        Console.WriteLine("You narrowly avoid the wolfs gaze as you lay flat in the grass on the side of the road. Luck seems to be on your side.");
+                    }
+                }
+                else if (action == "2")
+                {
                     enemyID = "Wolf";
-                    combatManager(enemyID, filePath, characterFilePath, flee);
-
+                    CombatManager(enemyID, filePath, characterFilePath, flee);
                 }
-                else
+                else if (action == "3")
                 {
-                    Console.WriteLine("You narrowly avoid the wolfs gaze as you lay flat in the grass on the side of the road. Luck seems to be on your side.");
+                    Console.Clear();
+                    Console.WriteLine("You attempt to make your way down the rough terrain. After hopping over a few rocks and tripping in some \nbrush, you tumble a few dozen feet onto a path near a river taking 5 damage.");
+                    playerHealth -= 5;
+                    Console.WriteLine("Current HP: " + playerHealth);
+                    Console.ReadKey();
                 }
+                SaveGame(savePoint, characterFilePath, playerName);
             }
-            else if (action == "2")
+           
+
+
+            if(savePoint == "1")
             {
-                enemyID = "Wolf";
-                combatManager(enemyID, filePath, characterFilePath, flee);
-            }
-            else if (action == "3")
-            {
-                Console.Clear();
-                Console.WriteLine("You attempt to make your way down the rough terrain. After hopping over a few rocks and tripping in some \nbrush, you tumble a few dozen feet onto a path near a river taking 5 damage.");
-                playerHealth -= 5;
-                Console.WriteLine(playerHealth);
+                Console.WriteLine("Save point 1");
                 Console.ReadKey();
             }
 

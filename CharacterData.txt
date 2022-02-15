@@ -1,4 +1,1 @@
-Snoopert
-100
-15
-0
+DefDead,100,15,1
