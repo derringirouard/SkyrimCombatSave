@@ -164,16 +164,18 @@ namespace SkyrimCombat
             Console.ReadKey();
         }
         
-        static void SaveGame(string savePoint, string characterFilePath, string playerName)
+        static void SaveGame(string savePoint, string characterFilePath, string playerName, int playerHealth, int playerAttack)
         {
             savePoint = "1";
             Console.WriteLine("Would you like to save? (y/n)");
             string action = Console.ReadLine().ToLower();
             if (action == "y")
             {
+                string playerAttackString = Convert.ToString(playerAttack);
+                string playerHealthString = Convert.ToString(playerHealth);
                 File.WriteAllText(characterFilePath, string.Empty);
                 List<string> list = new List<string>();
-                list.Add(playerName + ",100,15," + savePoint);
+                list.Add(playerName + "," + playerHealthString + ","+ playerAttackString + "," + savePoint);
                 File.WriteAllLines(characterFilePath, list);
                 Console.WriteLine("Game saved!");
                 Next();
@@ -352,7 +354,7 @@ namespace SkyrimCombat
                     Console.WriteLine("Current HP: " + playerHealth);
                     Console.ReadKey();
                 }
-                SaveGame(savePoint, characterFilePath, playerName);
+                SaveGame(savePoint, characterFilePath, playerName, playerHealth, playerAttack);
             }
            
 
