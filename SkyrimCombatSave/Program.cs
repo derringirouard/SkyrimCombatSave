@@ -382,6 +382,18 @@ namespace SkyrimCombat
 
             }
 
+            if(savePoint == "2")
+            {
+                Console.WriteLine("You approach a walled off city. As you approach a guard stops you.");
+                Console.WriteLine("Halt. What business do you have in the city?");
+                Console.WriteLine("\n\n\n1) I'm a businessman here to peddle my wares.\n2) My business is my business only.\n3) I'm a traveller. Was hoping to aquire some gear here.\n4) How dare you talk to me that way? (Attack him)");
+                action = Console.ReadLine();
+                if(action == "1")
+                {
+
+                }
+            }
+
 
            
         }
