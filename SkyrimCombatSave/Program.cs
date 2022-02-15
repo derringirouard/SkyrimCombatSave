@@ -106,9 +106,22 @@ namespace SkyrimCombat
                 string action = Console.ReadLine().ToLower();
                 if (action == "attack" || action == "1")
                 {
-                    enemyHealth -= playerAttack;
-                    Console.WriteLine("You attack the " + enemyName + " for " + playerAttack + " damage!");
-                    Thread.Sleep(1000);
+                    Random critAttempt = new Random();
+                    int thisRoll = critAttempt.Next(0, 16);
+                    if (thisRoll == 15)
+                    {
+                        enemyHealth -= (playerAttack * 2);
+                        Console.WriteLine("Critical hit!");
+                        Console.WriteLine("You attack the " + enemyName + " for " + (playerAttack * 2) + " damage!");
+                        Thread.Sleep(1000);
+                    }
+                    else
+                    {
+                        enemyHealth -= playerAttack;
+                        Console.WriteLine("You attack the " + enemyName + " for " + playerAttack + " damage!");
+                        Thread.Sleep(1000);
+                    }
+                    
                     if (enemyHealth > 0)
                     {
                         playerHealth = EnemyAttacks(enemyName, playerHealth, enemyAttack);
@@ -361,8 +374,12 @@ namespace SkyrimCombat
 
             if(savePoint == "1")
             {
-                Console.WriteLine("Save point 1");
-                Console.ReadKey();
+                Console.WriteLine("Another wolf appears!");
+                enemyID = "Wolf";
+                Thread.Sleep(1000);
+                CombatManager(enemyID, filePath, characterFilePath, flee);
+                Next();
+
             }
 
 
