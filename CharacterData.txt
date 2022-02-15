@@ -1,1 +1,1 @@
-DefDead,100,15,1
+MorganCity,100,15,0

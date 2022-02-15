@@ -28,7 +28,6 @@ namespace SkyrimCombat
                 playerHealth -= enemyAttack;
                 Thread.Sleep(1000);
                 Console.Clear();
-                Console.WriteLine("This is player health:" + playerHealth);
                 return playerHealth;
             }
 
@@ -112,7 +111,7 @@ namespace SkyrimCombat
                     Thread.Sleep(1000);
                     if (enemyHealth > 0)
                     {
-                        EnemyAttacks(enemyName, playerHealth, enemyAttack);
+                        playerHealth = EnemyAttacks(enemyName, playerHealth, enemyAttack);
                     }
 
                 }
@@ -126,7 +125,7 @@ namespace SkyrimCombat
                     {
                         Console.WriteLine("Failed to flee!");
                         Thread.Sleep(750);
-                        EnemyAttacks(enemyName, playerHealth, enemyAttack);
+                        playerHealth = EnemyAttacks(enemyName, playerHealth, enemyAttack);
                     }
                     else
                     {
@@ -147,7 +146,9 @@ namespace SkyrimCombat
                 Console.WriteLine(playerName + " has perished!");
                 Console.WriteLine("Press any key to continue...");
                 Console.ReadKey();
-            }else if(enemyHealth <= 0)
+                Environment.Exit(0);
+            }
+            else if(enemyHealth <= 0)
             {
                 Console.WriteLine(enemyName + " has been defeated!");
                 Thread.Sleep(1000);
@@ -211,9 +212,9 @@ namespace SkyrimCombat
                 int playerAttack = Convert.ToInt32(playerAttackString);
                 string savePoint = playerInfo[3];
 
+         
+
             
-
-
             Console.WriteLine("        ....            ..       ..    ..        ..   .......     ..  ...              ...");
             Thread.Sleep(250);
             Console.WriteLine("     ...     ...        ..      ..      ..      ..    ..     ..   ..  ....            ....");
@@ -363,7 +364,7 @@ namespace SkyrimCombat
             }
 
 
-
+           
         }
     }
 }
