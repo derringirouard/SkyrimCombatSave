@@ -390,8 +390,81 @@ namespace SkyrimCombat
                 action = Console.ReadLine();
                 if(action == "1")
                 {
+                    Console.WriteLine("Businessman eh? I suppose as long as you stay in line you are welcome. (he opens the main gate)");
+                    Thread.Sleep(1000);
+                    Console.WriteLine("You walk through the front gate. A surprised citizen dressed in higher end robes addresses you.");
+                    Console.WriteLine("Do you get to the cloud district often? (He looks you over) Oh...of course you don't.");
+                    Console.WriteLine("\n\n\n1) Attack him\n2) Attack him\n3) Attack him\n4) Attack him");
+                    Console.ReadLine();
+                    enemyID = "Nazeem";
+                    CombatManager(enemyID, filePath, characterFilePath, flee);
 
                 }
+                else if(action == "2")
+                {
+                    
+                        Console.WriteLine("You'd better keep that attitude in check. We don't need you sort around here. Beat it.");
+                        Thread.Sleep(1000);
+                        Console.WriteLine("\n\n\n1) Sorry. Been a long trip. I'll stay in line.\n2) Fight the guard.\n3) Leave the city.");
+                        action = Console.ReadLine();
+                    if(action == "1")
+                    {
+                        Console.WriteLine("I see. Please be sure not to cause any trouble inside. (He opens the main gate)");
+                        Thread.Sleep(1000);
+                        Console.WriteLine("You walk through the front gate. A surprised citizen dressed in higher end robes addresses you.");
+                        Console.WriteLine("Do you get to the cloud district often? (He looks you over) Oh...of course you don't.");
+                        Console.WriteLine("\n\n\n1) Attack him\n2) Attack him\n3) Attack him\n4) Attack him");
+                        Console.ReadLine();
+                        enemyID = "Nazeem";
+                        CombatManager(enemyID, filePath, characterFilePath, flee);
+
+                    }
+                    else if (action == "2")
+                    {
+                        enemyID = "Guard";
+                        CombatManager(enemyID, filePath, characterFilePath, flee);
+                        Console.WriteLine("You bust open the front gate. A surprised citizen dressed in higher end robes addresses you.");
+                        Console.WriteLine("Do you get to the cloud district often? (He looks you over) Oh...of course you don't.");
+                        Console.WriteLine("\n\n\n1) Attack him\n2) Attack him\n3) Attack him\n4) Attack him");
+                        Console.ReadLine();
+                        enemyID = "Nazeem";
+                        CombatManager(enemyID, filePath, characterFilePath, flee);
+
+                    }
+                    else if(action == "3")
+                    {
+                        Console.WriteLine("You leave the city and are eaten by a dragon.");
+                        Environment.Exit(0);
+
+                    }
+
+
+                }
+                else if(action == "3")
+                {
+                    Console.WriteLine("I see. Please be sure not to cause any trouble inside. (He opens the main gate)");
+                    Thread.Sleep(1000);
+                    Console.WriteLine("You walk through the front gate. A surprised citizen dressed in higher end robes addresses you.");
+                    Console.WriteLine("Do you get to the cloud district often? (He looks you over) Oh...of course you don't.");
+                    Console.WriteLine("\n\n\n1) Attack him\n2) Attack him\n3) Attack him\n4) Attack him");
+                    Console.ReadLine();
+                    enemyID = "Nazeem";
+                    CombatManager(enemyID, filePath, characterFilePath, flee);
+
+                }
+                else if(action == "4")
+                {
+                    enemyID = "Guard";
+                    CombatManager(enemyID, filePath, characterFilePath, flee);
+                    Console.WriteLine("You bust open the front gate. A surprised citizen dressed in higher end robes addresses you.");
+                    Console.WriteLine("Do you get to the cloud district often? (He looks you over) Oh...of course you don't.");
+                    Console.WriteLine("\n\n\n1) Attack him\n2) Attack him\n3) Attack him\n4) Attack him");
+                    Console.ReadLine();
+                    enemyID = "Nazeem";
+                    CombatManager(enemyID, filePath, characterFilePath, flee);
+
+                }
+
             }
 
 
