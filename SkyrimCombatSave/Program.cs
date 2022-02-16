@@ -202,8 +202,8 @@ namespace SkyrimCombat
         
         static void Main(string[] args)
         {
-            string filePath = @"C:\Users\Traffic\source\repos\SkyrimCombatSave\EnemyData.txt"; //Set file path of enemy data
-            string characterFilePath = @"C:\Users\Traffic\source\repos\SkyrimCombatSave\CharacterData.txt";
+            string filePath = @"C:\Users\Node5600X\source\repos\derringirouard\SkyrimCombatSave\EnemyData.txt"; //Set file path of enemy data
+            string characterFilePath = @"C:\Users\Node5600X\source\repos\derringirouard\SkyrimCombatSave\CharacterData.txt";
             string enemyID = "1)"; //Initialize variable to use to search EnemyData.txt for the enemy to battle
             bool flee = false;
             string action = string.Empty;
@@ -367,6 +367,7 @@ namespace SkyrimCombat
                     Console.WriteLine("Current HP: " + playerHealth);
                     Console.ReadKey();
                 }
+                savePoint = "1";
                 SaveGame(savePoint, characterFilePath, playerName, playerHealth, playerAttack);
             }
            
@@ -379,18 +380,20 @@ namespace SkyrimCombat
                 Thread.Sleep(1000);
                 CombatManager(enemyID, filePath, characterFilePath, flee);
                 Next();
-
+                savePoint = "2";
+                SaveGame(savePoint, characterFilePath, playerName, playerHealth, playerAttack);
             }
 
             if(savePoint == "2")
             {
+                Console.Clear();
                 Console.WriteLine("You approach a walled off city. As you approach a guard stops you.");
-                Console.WriteLine("Halt. What business do you have in the city?");
+                Console.WriteLine("\"Halt. What business do you have in the city?\"");
                 Console.WriteLine("\n\n\n1) I'm a businessman here to peddle my wares.\n2) My business is my business only.\n3) I'm a traveller. Was hoping to aquire some gear here.\n4) How dare you talk to me that way? (Attack him)");
                 action = Console.ReadLine();
                 if(action == "1")
                 {
-                    Console.WriteLine("Businessman eh? I suppose as long as you stay in line you are welcome. (he opens the main gate)");
+                    Console.WriteLine("Businessman eh? I suppose as long as you stay in line you are welcome. (he opens the main gate)\n");
                     Thread.Sleep(1000);
                     Console.WriteLine("You walk through the front gate. A surprised citizen dressed in higher end robes addresses you.");
                     Console.WriteLine("Do you get to the cloud district often? (He looks you over) Oh...of course you don't.");
@@ -409,7 +412,7 @@ namespace SkyrimCombat
                         action = Console.ReadLine();
                     if(action == "1")
                     {
-                        Console.WriteLine("I see. Please be sure not to cause any trouble inside. (He opens the main gate)");
+                        Console.WriteLine("I see. Please be sure not to cause any trouble inside. (He opens the main gate)\n");
                         Thread.Sleep(1000);
                         Console.WriteLine("You walk through the front gate. A surprised citizen dressed in higher end robes addresses you.");
                         Console.WriteLine("Do you get to the cloud district often? (He looks you over) Oh...of course you don't.");
@@ -423,7 +426,7 @@ namespace SkyrimCombat
                     {
                         enemyID = "Guard";
                         CombatManager(enemyID, filePath, characterFilePath, flee);
-                        Console.WriteLine("You bust open the front gate. A surprised citizen dressed in higher end robes addresses you.");
+                        Console.WriteLine("You bust open the front gate. A surprised citizen dressed in higher end robes addresses you.\n");
                         Console.WriteLine("Do you get to the cloud district often? (He looks you over) Oh...of course you don't.");
                         Console.WriteLine("\n\n\n1) Attack him\n2) Attack him\n3) Attack him\n4) Attack him");
                         Console.ReadLine();
@@ -444,7 +447,7 @@ namespace SkyrimCombat
                 {
                     Console.WriteLine("I see. Please be sure not to cause any trouble inside. (He opens the main gate)");
                     Thread.Sleep(1000);
-                    Console.WriteLine("You walk through the front gate. A surprised citizen dressed in higher end robes addresses you.");
+                    Console.WriteLine("You walk through the front gate. A surprised citizen dressed in higher end robes addresses you.\n");
                     Console.WriteLine("Do you get to the cloud district often? (He looks you over) Oh...of course you don't.");
                     Console.WriteLine("\n\n\n1) Attack him\n2) Attack him\n3) Attack him\n4) Attack him");
                     Console.ReadLine();
@@ -456,7 +459,7 @@ namespace SkyrimCombat
                 {
                     enemyID = "Guard";
                     CombatManager(enemyID, filePath, characterFilePath, flee);
-                    Console.WriteLine("You bust open the front gate. A surprised citizen dressed in higher end robes addresses you.");
+                    Console.WriteLine("You bust open the front gate. A surprised citizen dressed in higher end robes addresses you.\n");
                     Console.WriteLine("Do you get to the cloud district often? (He looks you over) Oh...of course you don't.");
                     Console.WriteLine("\n\n\n1) Attack him\n2) Attack him\n3) Attack him\n4) Attack him");
                     Console.ReadLine();
