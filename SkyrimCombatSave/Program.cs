@@ -3,38 +3,39 @@ using System.Threading;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using SkyrimCombatSave.Enemies;
 
 namespace SkyrimCombat
 {
     
     class Program
     {
-       static int EnemyAttacks(string enemyName, int playerHealth, int enemyAttack)
-        {
-            Console.WriteLine("\nThe " + enemyName + " attacks!");
-            Thread.Sleep(1000);
-            Random attackAttempt = new Random();
-            int attackRoll = attackAttempt.Next(0, 5);
-            if (attackRoll == 0)
-            {
-                Console.WriteLine(enemyName + " misses!");
-                Thread.Sleep(1000);
-                Console.Clear();
-                return playerHealth;
-            }
-            else
-            {
-                Console.WriteLine(enemyName + " hits for " + enemyAttack + " damage!");
-                playerHealth -= enemyAttack;
-                Thread.Sleep(1000);
-                Console.Clear();
-                return playerHealth;
-            }
+		//static int EnemyAttacks(string enemyName, int playerHealth, int enemyAttack)
+		//{
+		//	Console.WriteLine("\nThe " + enemyName + " attacks!");
+		//	Thread.Sleep(1000);
+		//	Random attackAttempt = new Random();
+		//	int attackRoll = attackAttempt.Next(0, 5);
+		//	if (attackRoll == 0)
+		//	{
+		//		Console.WriteLine(enemyName + " misses!");
+		//		Thread.Sleep(1000);
+		//		Console.Clear();
+		//		return playerHealth;
+		//	}
+		//	else
+		//	{
+		//		Console.WriteLine(enemyName + " hits for " + enemyAttack + " damage!");
+		//		playerHealth -= enemyAttack;
+		//		Thread.Sleep(1000);
+		//		Console.Clear();
+		//		return playerHealth;
+		//	}
 
-            
-        }
 
-        static void CombatManager(string enemyID, string filePath, string characterFilePath, bool flee) //Method to initiate and handle combat until either player or enemy health reaches 0
+		//}
+
+		static void CombatManager(string enemyID, string filePath, string characterFilePath, bool flee) //Method to initiate and handle combat until either player or enemy health reaches 0
         {
             List<string> playerInfo = new List<string>(); //Create list to hold player data
             foreach (string line in System.IO.File.ReadLines(characterFilePath)) //Goes through lines of player data
@@ -80,11 +81,13 @@ namespace SkyrimCombat
             //Console.ReadKey();
 
 
-            string enemyName = enemyInfo[1];
-            string enemyHealthString = enemyInfo[2];
-            int enemyHealth = Convert.ToInt32(enemyHealthString);
-            string enemyAttackString = enemyInfo[3];
-            int enemyAttack = Convert.ToInt32(enemyAttackString);
+            //string enemyName = enemyInfo[1];
+            //string enemyHealthString = enemyInfo[2];
+            //int enemyHealth = Convert.ToInt32(enemyHealthString);
+            //string enemyAttackString = enemyInfo[3];
+            //int enemyAttack = Convert.ToInt32(enemyAttackString);
+
+            Enemy enemy = new Mudcrab();
 
 
 
@@ -92,8 +95,8 @@ namespace SkyrimCombat
 
 
             Console.Clear();
-            Console.WriteLine("You have entered combat with the " + enemyName + "!\n");
-            while (enemyHealth > 0 && playerHealth > 0 && flee == false) //Perform the following while Player and Enemy are still alive
+            Console.WriteLine("You have entered combat with the " + enemy.Name + "!\n");
+            while (enemy.HP > 0 && playerHealth > 0 && flee == false) //Perform the following while Player and Enemy are still alive
 
             {
                 Console.WriteLine("What do you want to do?");
@@ -102,7 +105,7 @@ namespace SkyrimCombat
                 Console.WriteLine();
                 Console.WriteLine();
                 Console.WriteLine();
-                Console.WriteLine(playerName + "'s " + "HP: " + playerHealth + "                 " + enemyName + " HP: " + enemyHealth);
+                Console.WriteLine(playerName + "'s " + "HP: " + playerHealth + "                 " + enemy.Name + " HP: " + enemy.HP);
                 string action = Console.ReadLine().ToLower();
                 if (action == "attack" || action == "1")
                 {
@@ -110,21 +113,22 @@ namespace SkyrimCombat
                     int thisRoll = critAttempt.Next(0, 16);
                     if (thisRoll == 15)
                     {
-                        enemyHealth -= (playerAttack * 2);
+                        enemy.HP -= (playerAttack * 2);
                         Console.WriteLine("Critical hit!");
-                        Console.WriteLine("You attack the " + enemyName + " for " + (playerAttack * 2) + " damage!");
+                        Console.WriteLine("You attack the " + enemy.Name + " for " + (playerAttack * 2) + " damage!");
                         Thread.Sleep(1000);
                     }
                     else
                     {
-                        enemyHealth -= playerAttack;
-                        Console.WriteLine("You attack the " + enemyName + " for " + playerAttack + " damage!");
+                        enemy.HP -= playerAttack;
+                        Console.WriteLine("You attack the " + enemy.Name + " for " + playerAttack + " damage!");
                         Thread.Sleep(1000);
                     }
                     
-                    if (enemyHealth > 0)
+                    if (enemy.HP > 0)
                     {
-                        playerHealth = EnemyAttacks(enemyName, playerHealth, enemyAttack);
+                        //playerHealth = EnemyAttacks(enemy.Name, playerHealth, enemy.AttackPower);
+                        playerHealth = enemy.Attack(playerHealth);
                     }
 
                 }
@@ -138,7 +142,8 @@ namespace SkyrimCombat
                     {
                         Console.WriteLine("Failed to flee!");
                         Thread.Sleep(750);
-                        playerHealth = EnemyAttacks(enemyName, playerHealth, enemyAttack);
+                        //playerHealth = EnemyAttacks(enemy.Name, playerHealth, enemy.AttackPower);
+                        playerHealth = enemy.Attack(playerHealth);
                     }
                     else
                     {
@@ -161,9 +166,9 @@ namespace SkyrimCombat
                 Console.ReadKey();
                 Environment.Exit(0);
             }
-            else if(enemyHealth <= 0)
+            else if(enemy.HP <= 0)
             {
-                Console.WriteLine(enemyName + " has been defeated!");
+                Console.WriteLine(enemy.Name + " has been defeated!");
                 Thread.Sleep(1000);
             }
             flee = false;
@@ -202,13 +207,13 @@ namespace SkyrimCombat
         
         static void Main(string[] args)
         {
-            string filePath = @"C:\Users\Node5600X\source\repos\derringirouard\SkyrimCombatSave\EnemyData.txt"; //Set file path of enemy data
-            string characterFilePath = @"C:\Users\Node5600X\source\repos\derringirouard\SkyrimCombatSave\CharacterData.txt";
+            //string filePath = @"C:\Users\Jon\source\repos\SkyrimCombatSaveGit\SkyrimCombatSave\EnemyData.txt"; //Set file path of enemy data
+            string characterFilePath = @"C:\Users\Jon\source\repos\SkyrimCombatSaveGit\SkyrimCombatSave\CharacterData.txt";
             string enemyID = "1)"; //Initialize variable to use to search EnemyData.txt for the enemy to battle
             bool flee = false;
             string action = string.Empty;
 
-            List<string> enemySets = new List<string>(File.ReadAllLines(filePath)); //Create list of enemy data pulled from EnemyData.txt
+            //List<string> enemySets = new List<string>(File.ReadAllLines(filePath)); //Create list of enemy data pulled from EnemyData.txt
             
 
 
