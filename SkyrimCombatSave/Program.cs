@@ -10,32 +10,7 @@ namespace SkyrimCombat
     class Program
     {
 
-        static int EnemyAttacks(string enemyName, int playerHealth, int enemyAttack)
-        {
-            Console.WriteLine("\nThe " + enemyName + " attacks!");
-            Thread.Sleep(1000);
-            Random attackAttempt = new Random();
-            int attackRoll = attackAttempt.Next(0, 5);
-            if (attackRoll == 0)
-            {
-                Console.WriteLine(enemyName + " misses!");
-                Thread.Sleep(1000);
-                Console.Clear();
-                return playerHealth;
-            }
-            else
-            {
-                Console.WriteLine(enemyName + " hits for " + enemyAttack + " damage!");
-                playerHealth -= enemyAttack;
-                Thread.Sleep(1000);
-                Console.Clear();
-                return playerHealth;
-            }
-
-
-        }
-
-        static List<string> CombatManager(string enemyID, string filePath, string characterFilePath, bool flee, int playerEXP, string savePoint) //Method to initiate and handle combat until either player or enemy health reaches 0
+        static List<string> CombatManager(tring characterFilePath, bool flee, int playerEXP, string savePoint) //Method to initiate and handle combat until either player or enemy health reaches 0
         {
             List<string> playerInfo = new List<string>(); //Create list to hold player data
             foreach (string line in System.IO.File.ReadLines(characterFilePath)) //Goes through lines of player data
@@ -44,11 +19,6 @@ namespace SkyrimCombat
 
             }
 
-
-            //playerInfo.ForEach(i => Console.WriteLine(i.ToString())); //Debug to validate player data
-            //Console.WriteLine("Above is playerInfo from filePath read thing\n\n");
-
-            //Console.ReadKey();
             //Assignment of player list values to variables
 
             string playerName = playerInfo[0];
@@ -58,30 +28,7 @@ namespace SkyrimCombat
             int playerAttack = Convert.ToInt32(playerAttackString);
             playerEXP = Convert.ToInt32(playerInfo[4]);
 
-
-
             //End of player info retrieval 
-
-
-
-
-            List<string> enemyInfo = new List<string>();
-            string enemyInfoString = string.Empty;
-            foreach (string line in System.IO.File.ReadLines(filePath))
-            {
-
-                if (line.Contains(enemyID))
-                {
-                    enemyInfo = line.Split(",").ToList();
-                    break;
-                }
-
-            }
-
-
-            //enemyInfo.ForEach(i => Console.WriteLine(i.ToString()));
-            //Console.WriteLine("Above is enemyInfo from filePath read thing\n\n");
-            //Console.ReadKey();
 
 
             string enemyName = enemyInfo[1];
@@ -91,10 +38,6 @@ namespace SkyrimCombat
             int enemyAttack = Convert.ToInt32(enemyAttackString);
             string enemyEXPString = enemyInfo[4];
             int enemyEXP = Convert.ToInt32(enemyEXPString);
-
-
-
-
 
 
             Console.Clear();
@@ -130,7 +73,7 @@ namespace SkyrimCombat
 
                     if (enemyHealth > 0)
                     {
-                        playerHealth = EnemyAttacks(enemyName, playerHealth, enemyAttack);
+                        playerHealth = Attack(enemyName, playerHealth, enemyAttack);
                     }
 
                 }
@@ -144,7 +87,7 @@ namespace SkyrimCombat
                     {
                         Console.WriteLine("Failed to flee!");
                         Thread.Sleep(750);
-                        playerHealth = EnemyAttacks(enemyName, playerHealth, enemyAttack);
+                        playerHealth = Attack(enemyName, playerHealth, enemyAttack);
                     }
                     else
                     {
@@ -157,9 +100,7 @@ namespace SkyrimCombat
                 }
 
 
-
-
-            };
+            }
             if (playerHealth <= 0)
             {
                 Console.WriteLine(playerName + " has perished!");
@@ -197,8 +138,6 @@ namespace SkyrimCombat
                     File.WriteAllLines(characterFilePath, list);
                     return list;
 
-
-
                 }
 
                 flee = false;
@@ -229,11 +168,6 @@ namespace SkyrimCombat
                 }
             }
 
-
-
-
-
-
         static void Main(string[] args)
         {
             string filePath = @"C:\Users\Node5600X\source\repos\SkyrimCombatSave\EnemyData.txt"; //Set file path of enemy data
@@ -245,8 +179,6 @@ namespace SkyrimCombat
 
             List<string> enemySets = new List<string>(File.ReadAllLines(filePath)); //Create list of enemy data pulled from EnemyData.txt
 
-
-            
 
             List<string> playerInfo = new List<string>();
             foreach (string line in System.IO.File.ReadLines(characterFilePath))
@@ -265,8 +197,6 @@ namespace SkyrimCombat
             int playerEXP = Convert.ToInt32(playerEXPString);
 
 
-
-            
             Console.WriteLine("        ....            ..       ..    ..        ..   .......     ..  ...              ...");
             Thread.Sleep(250);
             Console.WriteLine("     ...     ...        ..      ..      ..      ..    ..     ..   ..  ....            ....");
@@ -337,8 +267,6 @@ namespace SkyrimCombat
 
             if (savePoint == "0")
             {
-
-
                 Console.WriteLine("You step out of a cave entrance onto the top of a mountain. A dragon flies overhead toward the east \nand a path lays before you heading north. What do you do?");
                 Console.WriteLine("\n\n\n1) Follow the path.");
                 Console.WriteLine("2) Engage the dragon.");
@@ -411,8 +339,6 @@ namespace SkyrimCombat
                 Console.ReadKey();
             }
 
-
-
             if (savePoint == "1")
             {
                 Console.WriteLine("Another wolf appears!");
@@ -480,7 +406,6 @@ namespace SkyrimCombat
                         Environment.Exit(0);
 
                     }
-
 
                 }
                 else if (action == "3")
@@ -560,12 +485,6 @@ namespace SkyrimCombat
                     }
                 }
             }
-        
-
-
-
         }
-        
-
     }
 }
