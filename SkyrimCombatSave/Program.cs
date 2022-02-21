@@ -9,8 +9,7 @@ namespace SkyrimCombat
 
     class Program
     {
-        //This is the latest with comments added 2/21/2022 12:39PM
-        SkyrimCombatSave.Enemy.Enemy enemy = new SkyrimCombatSave.Enemy.Wolf();
+        Enemy.Enemy enemy = new SkyrimCombatSave.Enemy.Wolf();
         static List<string> CombatManager(string characterFilePath, bool flee, int playerEXP, string savePoint) //Method to initiate and handle combat until either player or enemy health reaches 0
         {
             List<string> playerInfo = new List<string>(); //Create list to hold player data
@@ -65,7 +64,7 @@ namespace SkyrimCombat
 
                     if (enemy.HP > 0)
                     {
-                        playerHealth = Attack(enemy.Name, playerHealth, enemy.AttackPower);
+                        playerHealth = enemy.Attack(playerHealth);
                     }
 
                 }
@@ -79,7 +78,7 @@ namespace SkyrimCombat
                     {
                         Console.WriteLine("Failed to flee!");
                         Thread.Sleep(750);
-                        playerHealth = Attack(targetHealth);
+                        playerHealth = enemy.Attack(playerHealth);
                     }
                     else
                     {
@@ -106,18 +105,29 @@ namespace SkyrimCombat
                 Console.WriteLine(enemyName + " has been defeated!");
                 Thread.Sleep(1000);
                 Console.WriteLine("Current exp: " + playerEXP);
-                playerEXP += enemyEXP;
-                Console.WriteLine("Enemy exp: " + enemyEXP);
+                playerEXP += enemy.EXP;
+                Console.WriteLine("Enemy exp: " + enemy.EXP);
                 Console.WriteLine("New exp: " + playerEXP);
                 playerInfo[4] = Convert.ToString(playerEXP);
+                File.WriteAllText(characterFilePath, string.Empty);
+                List<string> list = new List<string>();
+                List<string> newPlayerInfo = new List<string>();
+                list.Add(playerName);
+                string playerHealthstring = Convert.ToString(playerHealth);
+                list.Add(playerHealthstring);
+                string playerAttackstring = Convert.ToString(playerAttack);
+                list.Add(playerAttackstring);
+                list.Add(savePoint);
+                string playerEXPstring = Convert.ToString(playerEXP);
+                list.Add(playerEXPstring);
+                list.Add(playerName + "," + playerHealth + "," + playerAttack + "," + savePoint + "," + playerEXP);
+                File.WriteAllLines(characterFilePath, list);
                 if (playerEXP > 1000)
                 {
                     playerEXP -= 1000;
                     Console.WriteLine("You have leveled up! Your attack has increased!");
                     playerAttack += 5;
                     File.WriteAllText(characterFilePath, string.Empty);
-                    List<string> list = new List<string>();
-                    List<string> newPlayerInfo = new List<string>();
                     list.Add(playerName);
                     string playerHealthstring = Convert.ToString(playerHealth);
                     list.Add(playerHealthstring);
@@ -274,7 +284,7 @@ namespace SkyrimCombat
                 else if (action == "2")
                 {
                     enemyID = "Dragon";
-                    playerInfo = CombatManager(enemyID, filePath, characterFilePath, flee, playerEXP, savePoint);
+                    playerInfo = CombatManager(characterFilePath, flee, playerEXP, savePoint);
                 }
                 else if (action == "3")
                 {
@@ -304,7 +314,7 @@ namespace SkyrimCombat
                         Console.WriteLine("Failed to hide!");
                         Thread.Sleep(1000);
                         enemyID = "Wolf";
-                        playerInfo = CombatManager(enemyID, filePath, characterFilePath, flee, playerEXP, savePoint);
+                        playerInfo = CombatManager(characterFilePath, flee, playerEXP, savePoint);
 
                     }
                     else
@@ -315,7 +325,7 @@ namespace SkyrimCombat
                 else if (action == "2")
                 {
                     enemyID = "Wolf";
-                    playerInfo = CombatManager(enemyID, filePath, characterFilePath, flee, playerEXP, savePoint);
+                    playerInfo = CombatManager(characterFilePath, flee, playerEXP, savePoint);
                 }
                 else if (action == "3")
                 {
@@ -336,7 +346,7 @@ namespace SkyrimCombat
                 Console.WriteLine("Another wolf appears!");
                 enemyID = "Wolf";
                 Thread.Sleep(1000);
-                playerInfo = CombatManager(enemyID, filePath, characterFilePath, flee, playerEXP, savePoint);
+                playerInfo = CombatManager(characterFilePath, flee, playerEXP, savePoint);
                 Next();
                 savePoint = "2";
 
@@ -358,7 +368,7 @@ namespace SkyrimCombat
                     Console.WriteLine("\n\n\n1) Attack him\n2) Attack him\n3) Attack him\n4) Attack him");
                     Console.ReadLine();
                     enemyID = "Nazeem";
-                    playerInfo = CombatManager(enemyID, filePath, characterFilePath, flee, playerEXP, savePoint);
+                    playerInfo = CombatManager(characterFilePath, flee, playerEXP, savePoint);
 
                 }
                 else if (action == "2")
@@ -377,19 +387,19 @@ namespace SkyrimCombat
                         Console.WriteLine("\n\n\n1) Attack him\n2) Attack him\n3) Attack him\n4) Attack him");
                         Console.ReadLine();
                         enemyID = "Nazeem";
-                        playerInfo = CombatManager(enemyID, filePath, characterFilePath, flee, playerEXP, savePoint);
+                        playerInfo = CombatManager(characterFilePath, flee, playerEXP, savePoint);
 
                     }
                     else if (action == "2")
                     {
                         enemyID = "Guard";
-                        playerInfo = CombatManager(enemyID, filePath, characterFilePath, flee, playerEXP, savePoint);
+                        playerInfo = CombatManager(characterFilePath, flee, playerEXP, savePoint);
                         Console.WriteLine("You bust open the front gate. A surprised citizen dressed in higher end robes addresses you.");
                         Console.WriteLine("Do you get to the cloud district often? (He looks you over) Oh...of course you don't.");
                         Console.WriteLine("\n\n\n1) Attack him\n2) Attack him\n3) Attack him\n4) Attack him");
                         Console.ReadLine();
                         enemyID = "Nazeem";
-                        playerInfo = CombatManager(enemyID, filePath, characterFilePath, flee, playerEXP, savePoint);
+                        playerInfo = CombatManager(characterFilePath, flee, playerEXP, savePoint);
 
                     }
                     else if (action == "3")
@@ -409,19 +419,19 @@ namespace SkyrimCombat
                     Console.WriteLine("\n\n\n1) Attack him\n2) Attack him\n3) Attack him\n4) Attack him");
                     Console.ReadLine();
                     enemyID = "Nazeem";
-                    playerInfo = CombatManager(enemyID, filePath, characterFilePath, flee, playerEXP, savePoint);
+                    playerInfo = CombatManager(characterFilePath, flee, playerEXP, savePoint);
 
                 }
                 else if (action == "4")
                 {
                     enemyID = "Guard";
-                    playerInfo = CombatManager(enemyID, filePath, characterFilePath, flee, playerEXP, savePoint);
+                    playerInfo = CombatManager(characterFilePath, flee, playerEXP, savePoint);
                     Console.WriteLine("You bust open the front gate. A surprised citizen dressed in higher end robes addresses you.");
                     Console.WriteLine("Do you get to the cloud district often? (He looks you over) Oh...of course you don't.");
                     Console.WriteLine("\n\n\n1) Attack him\n2) Attack him\n3) Attack him\n4) Attack him");
                     Console.ReadLine();
                     enemyID = "Nazeem";
-                    playerInfo = CombatManager(enemyID, filePath, characterFilePath, flee, playerEXP, savePoint);
+                    playerInfo = CombatManager(characterFilePath, flee, playerEXP, savePoint);
 
                 }
                 else if (action == "5")
@@ -439,7 +449,7 @@ namespace SkyrimCombat
                         int nextEnemyInt = random.Next(0, 4);
                         string nextEnemy = Convert.ToString(nextEnemyInt);
                         enemyID = nextEnemy;
-                        playerInfo = CombatManager(enemyID, filePath, characterFilePath, flee, playerEXP, savePoint);
+                        playerInfo = CombatManager(characterFilePath, flee, playerEXP, savePoint);
                         Console.WriteLine("Do you want to keep fighting? (y/n)");
                         Console.WriteLine(playerInfo[4]);
                         action = Console.ReadLine().ToLower();
