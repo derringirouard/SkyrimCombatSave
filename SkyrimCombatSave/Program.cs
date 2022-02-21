@@ -9,6 +9,7 @@ namespace SkyrimCombat
 
     class Program
     {
+        //This is the latest with comments added 2/21/2022 12:39PM
         SkyrimCombatSave.Enemy.Enemy enemy = new SkyrimCombatSave.Enemy.Wolf();
         static List<string> CombatManager(string characterFilePath, bool flee, int playerEXP, string savePoint) //Method to initiate and handle combat until either player or enemy health reaches 0
         {
