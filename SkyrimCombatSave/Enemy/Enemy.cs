@@ -2,18 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace SkyrimCombatSave.Enemy
 {
-    internal class Enemy
+    class Enemy
     {
-        string Name { get; set; }
-        int HP { get; set; }
-        int AttackPower { get; set; }
-        int EXP { get; set; }
+        public string Name { get; set; }
+        public int HP { get; set; }
+        public int AttackPower { get; set; }
+        public int EXP { get; set; }
 
         public Enemy(string name, int hp, int attack, int exp)
         {

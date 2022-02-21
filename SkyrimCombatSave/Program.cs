@@ -9,8 +9,8 @@ namespace SkyrimCombat
 
     class Program
     {
-
-        static List<string> CombatManager(tring characterFilePath, bool flee, int playerEXP, string savePoint) //Method to initiate and handle combat until either player or enemy health reaches 0
+        SkyrimCombatSave.Enemy.Enemy enemy = new SkyrimCombatSave.Enemy.Wolf();
+        static List<string> CombatManager(string characterFilePath, bool flee, int playerEXP, string savePoint) //Method to initiate and handle combat until either player or enemy health reaches 0
         {
             List<string> playerInfo = new List<string>(); //Create list to hold player data
             foreach (string line in System.IO.File.ReadLines(characterFilePath)) //Goes through lines of player data
@@ -29,20 +29,11 @@ namespace SkyrimCombat
             playerEXP = Convert.ToInt32(playerInfo[4]);
 
             //End of player info retrieval 
-
-
-            string enemyName = enemyInfo[1];
-            string enemyHealthString = enemyInfo[2];
-            int enemyHealth = Convert.ToInt32(enemyHealthString);
-            string enemyAttackString = enemyInfo[3];
-            int enemyAttack = Convert.ToInt32(enemyAttackString);
-            string enemyEXPString = enemyInfo[4];
-            int enemyEXP = Convert.ToInt32(enemyEXPString);
-
+           
 
             Console.Clear();
-            Console.WriteLine("You have entered combat with the " + enemyName + "!\n");
-            while (enemyHealth > 0 && playerHealth > 0 && flee == false) //Perform the following while Player and Enemy are still alive
+            Console.WriteLine("You have entered combat with the " + enemy.Name + "!\n");
+            while (enemy.HP > 0 && playerHealth > 0 && flee == false) //Perform the following while Player and Enemy are still alive
 
             {
                 Console.WriteLine("What do you want to do?");
@@ -51,7 +42,7 @@ namespace SkyrimCombat
                 Console.WriteLine();
                 Console.WriteLine();
                 Console.WriteLine();
-                Console.WriteLine(playerName + "'s " + "HP: " + playerHealth + "                 " + enemyName + " HP: " + enemyHealth);
+                Console.WriteLine(playerName + "'s " + "HP: " + playerHealth + "                 " + enemy.Name + " HP: " + enemy.HP);
                 string action = Console.ReadLine().ToLower();
                 if (action == "attack" || action == "1")
                 {
@@ -59,21 +50,21 @@ namespace SkyrimCombat
                     int thisRoll = critAttempt.Next(0, 16);
                     if (thisRoll == 15)
                     {
-                        enemyHealth -= (playerAttack * 2);
+                        enemy.HP -= (playerAttack * 2);
                         Console.WriteLine("Critical hit!");
-                        Console.WriteLine("You attack the " + enemyName + " for " + (playerAttack * 2) + " damage!");
+                        Console.WriteLine("You attack the " + enemy.Name + " for " + (playerAttack * 2) + " damage!");
                         Thread.Sleep(1000);
                     }
                     else
                     {
-                        enemyHealth -= playerAttack;
-                        Console.WriteLine("You attack the " + enemyName + " for " + playerAttack + " damage!");
+                        enemy.HP -= playerAttack;
+                        Console.WriteLine("You attack the " + enemy.Name + " for " + playerAttack + " damage!");
                         Thread.Sleep(1000);
                     }
 
-                    if (enemyHealth > 0)
+                    if (enemy.HP > 0)
                     {
-                        playerHealth = Attack(enemyName, playerHealth, enemyAttack);
+                        playerHealth = Attack(enemy.Name, playerHealth, enemy.AttackPower);
                     }
 
                 }
@@ -87,7 +78,7 @@ namespace SkyrimCombat
                     {
                         Console.WriteLine("Failed to flee!");
                         Thread.Sleep(750);
-                        playerHealth = Attack(enemyName, playerHealth, enemyAttack);
+                        playerHealth = Attack(targetHealth);
                     }
                     else
                     {
