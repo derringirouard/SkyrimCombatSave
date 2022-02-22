@@ -245,7 +245,7 @@ namespace SkyrimCombat
 
             if (savePoint == "0")
             {
-                Console.WriteLine("You step out of a cave entrance onto the top of a mountain. A dragon flies overhead toward the\nand a path lays before you. What do you do?");
+                Console.WriteLine("You step out of a cave entrance onto the top of a mountain. A dragon flies overhead\nand a path lays before you. What do you do?");
                 Console.WriteLine("\n\n\n1) Follow the path.");
                 Console.WriteLine("2) Engage the dragon.");
                 Console.WriteLine("3) Try to take a shortcut down the side of the mountain.");
