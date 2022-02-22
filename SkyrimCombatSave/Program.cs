@@ -9,7 +9,18 @@ namespace SkyrimCombat
 
     class Program
     {
-        
+        static List<string> UpdatePlayerInfo (string characterFilePath, string playerName, int playerHealth, int playerAttack, int playerEXP, string savePoint)
+        {
+            File.WriteAllText(characterFilePath, string.Empty);
+            List<string> list = new List<string>();
+            List<string> newPlayerInfo = new List<string>();
+            string playerHealthstring = Convert.ToString(playerHealth);
+            string playerAttackstring = Convert.ToString(playerAttack);
+            string playerEXPstring = Convert.ToString(playerEXP);
+            list.Add(playerName + "," + playerHealth + "," + playerAttack + "," + savePoint + "," + playerEXP);
+            File.WriteAllLines(characterFilePath, list);
+            return list;
+        }
         static List<string> CombatManager(string characterFilePath, bool flee, int playerEXP, string savePoint) //Method to initiate and handle combat until either player or enemy health reaches 0
         {
             SkyrimCombatSave.Enemy.Enemy enemy = new SkyrimCombatSave.Enemy.Wolf();
@@ -99,25 +110,13 @@ namespace SkyrimCombat
                 Console.WriteLine("Current exp: " + playerEXP);
                 Next();
                 playerInfo[4] = Convert.ToString(playerEXP);
-                File.WriteAllText(characterFilePath, string.Empty);
-                List<string> list = new List<string>();
-                List<string> newPlayerInfo = new List<string>();
-                string playerHealthstring = Convert.ToString(playerHealth);
-                string playerAttackstring = Convert.ToString(playerAttack);
-                string playerEXPstring = Convert.ToString(playerEXP);
-                list.Add(playerName + "," + playerHealth + "," + playerAttack + "," + savePoint + "," + playerEXP);
-                File.WriteAllLines(characterFilePath, list);
+                UpdatePlayerInfo(characterFilePath, playerName, playerHealth, playerAttack, playerEXP, savePoint);
                 if (playerEXP > 1000)
                 {
                     playerEXP -= 1000;
                     Console.WriteLine("You have leveled up! Your attack has increased!");
                     playerAttack += 5;
-                    File.WriteAllText(characterFilePath, string.Empty);
-                    playerHealthstring = Convert.ToString(playerHealth);
-                    playerAttackstring = Convert.ToString(playerAttack);
-                    playerEXPstring = Convert.ToString(playerEXP);
-                    list.Add(playerName + "," + playerHealth + "," + playerAttack + "," + savePoint + "," + playerEXP);
-                    File.WriteAllLines(characterFilePath, list);
+                    List<string> list = UpdatePlayerInfo(characterFilePath, playerName, playerHealth, playerAttack, playerEXP, savePoint);
                     return list;
                 }
 
@@ -268,6 +267,7 @@ namespace SkyrimCombat
                     Console.WriteLine("You attempt to make your way down the rough terrain. After hopping over a few rocks and tripping in some \nbrush, you tumble a few dozen feet onto a familiar path taking 5 damage.");
                     playerHealth -= 5;
                     Console.WriteLine("Current HP: " + playerHealth);
+                    UpdatePlayerInfo(characterFilePath, playerName, playerHealth, playerAttack, playerEXP, savePoint);
                     Next();
                 }
 
@@ -307,6 +307,7 @@ namespace SkyrimCombat
                     Console.WriteLine("You attempt to make your way down the rough terrain. After hopping over a few rocks and tripping in some \nbrush, you tumble a few dozen feet onto a path near a river taking 5 damage.");
                     playerHealth -= 5;
                     Console.WriteLine("Current HP: " + playerHealth);
+                    UpdatePlayerInfo(characterFilePath, playerName, playerHealth, playerAttack, playerEXP, savePoint);
                     Console.ReadKey();
                 }
                 savePoint = "1";
