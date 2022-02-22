@@ -1,1 +1,6 @@
-Spoop,95,20,1,900
+Bloogtastic
+100
+15
+1
+75
+Bloogtastic,100,15,1,75

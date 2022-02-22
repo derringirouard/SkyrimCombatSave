@@ -30,7 +30,7 @@ namespace SkyrimCombatSave.Enemy
             if (attackRoll == 0)
             {
                 Console.WriteLine(Name + " misses!");
-                Console.ReadKey();
+                Thread.Sleep(1000);
                 Console.Clear();
                 return targetHealth;
             }
@@ -38,7 +38,7 @@ namespace SkyrimCombatSave.Enemy
             {
                 Console.WriteLine(Name + " hits for " + AttackPower + " damage!");
                 targetHealth -= AttackPower;
-                Console.ReadKey();
+                Thread.Sleep(1000);
                 Console.Clear();
                 return targetHealth;
             }

@@ -9,9 +9,10 @@ namespace SkyrimCombat
 
     class Program
     {
-        SkyrimCombatSave.Enemy.Enemy enemy = new SkyrimCombatSave.Enemy.Wolf();
+        
         static List<string> CombatManager(string characterFilePath, bool flee, int playerEXP, string savePoint) //Method to initiate and handle combat until either player or enemy health reaches 0
         {
+            SkyrimCombatSave.Enemy.Enemy enemy = new SkyrimCombatSave.Enemy.Wolf();
             List<string> playerInfo = new List<string>(); //Create list to hold player data
             foreach (string line in System.IO.File.ReadLines(characterFilePath)) //Goes through lines of player data
             {
@@ -157,8 +158,8 @@ namespace SkyrimCombat
 
         static void Main(string[] args)
         {
-            string filePath = @"C:\Users\Node5600X\source\repos\SkyrimCombatSave\EnemyData.txt"; //Set file path of enemy data
-            string characterFilePath = @"C:\Users\Node5600X\source\repos\SkyrimCombatSave\CharacterData.txt";
+            string filePath = @"C:\Users\Traffic\Documents\Git\derringirouard\SkyrimCombatSave\EnemyData.txt"; //Set file path of enemy data
+            string characterFilePath = @"C:\Users\Traffic\Documents\Git\derringirouard\SkyrimCombatSave\CharacterData.txt";
             string enemyID = "1)"; //Initialize variable to use to search EnemyData.txt for the enemy to battle
             bool flee = false;
             string action = string.Empty;
@@ -182,25 +183,25 @@ namespace SkyrimCombat
             int playerEXP = Convert.ToInt32(playerEXPString);
 
             Console.WriteLine("        ....            ..       ..    ..        ..   .......     ..  ...              ...");
-            Thread.Sleep(250);
+            Thread.Sleep(100);
             Console.WriteLine("     ...     ...        ..      ..      ..      ..    ..     ..   ..  ....            ....");
-            Thread.Sleep(250);
+            Thread.Sleep(100);
             Console.WriteLine("   ...                  ..     ..        ..    ..     ..     ..   ..  .. ..          .. ..");
-            Thread.Sleep(250);
+            Thread.Sleep(100);
             Console.WriteLine("   ...                  ..    ..          ..  ..      ..     ..   ..  ..  ..        ..  ..");
-            Thread.Sleep(250);
+            Thread.Sleep(100);
             Console.WriteLine("       ....             ..  ..             ....       .. .. ..    ..  ..   ..      ..   ..");
-            Thread.Sleep(250);
+            Thread.Sleep(100);
             Console.WriteLine("        .....           .. ..               ..        .. ..       ..  ..    ..    ..    ..");
-            Thread.Sleep(250);
+            Thread.Sleep(100);
             Console.WriteLine("              ...       .. ..               ..        ..  ..      ..  ..     ..  ..     ..");
-            Thread.Sleep(250);
+            Thread.Sleep(100);
             Console.WriteLine("                ...     ..    ..            ..        ..   ..     ..  ..      ....      ..");
-            Thread.Sleep(250);
+            Thread.Sleep(100);
             Console.WriteLine("    ...        ...      ..      ..          ..        ..    ..    ..  ..       ..       ..");
-            Thread.Sleep(250);
+            Thread.Sleep(100);
             Console.WriteLine("     ...    ...         ..       ..         ..        ..     ..   ..  ..                ..");
-            Thread.Sleep(250);
+            Thread.Sleep(100);
             Console.WriteLine("         ...            ..       ..         ..        ..      ..  ..  ..                ..");
             Console.WriteLine("\n                                      A Text Adventure");
             Console.WriteLine("\n                                     A Title by Snoopert                                  ");
@@ -229,12 +230,7 @@ namespace SkyrimCombat
             else if (action == "2")
             {
                 Console.Write("Returning to your place in Skyrim");
-                Thread.Sleep(750);
-                Console.Write(".");
-                Thread.Sleep(750);
-                Console.Write(".");
-                Thread.Sleep(750);
-                Console.Write(".");
+                Thread.Sleep(500);
                 foreach (string line in System.IO.File.ReadLines(characterFilePath))
                 {
                     playerInfo = line.Split(",").ToList();
@@ -279,7 +275,7 @@ namespace SkyrimCombat
                 if (action == "1" || action == "path")
                 {
                     Console.WriteLine("You attempt to hide.");
-                    Thread.Sleep(1500);
+                    Thread.Sleep(1000);
                     Random fleeAttempt = new Random();
                     int thisRoll = fleeAttempt.Next(0, 10);
                     if (thisRoll < 9)
@@ -309,8 +305,6 @@ namespace SkyrimCombat
                 }
                 savePoint = "1";
                 SaveGame(savePoint, characterFilePath, playerName, playerHealth, playerAttack, playerEXP);
-                Console.WriteLine(playerAttack);
-                Console.ReadKey();
             }
 
             if (savePoint == "1")
@@ -319,7 +313,6 @@ namespace SkyrimCombat
                 enemyID = "Wolf";
                 Thread.Sleep(1000);
                 playerInfo = CombatManager(characterFilePath, flee, playerEXP, savePoint);
-                Next();
                 savePoint = "2";
             }
 
