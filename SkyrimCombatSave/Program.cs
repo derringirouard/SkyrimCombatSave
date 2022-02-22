@@ -321,7 +321,6 @@ namespace SkyrimCombat
                 playerInfo = CombatManager(characterFilePath, flee, playerEXP, savePoint);
                 Next();
                 savePoint = "2";
-
             }
 
             if (savePoint == "2")
@@ -341,11 +340,9 @@ namespace SkyrimCombat
                     Console.ReadLine();
                     enemyID = "Nazeem";
                     playerInfo = CombatManager(characterFilePath, flee, playerEXP, savePoint);
-
                 }
                 else if (action == "2")
                 {
-
                     Console.WriteLine("You'd better keep that attitude in check. We don't need you sort around here. Beat it.");
                     Thread.Sleep(1000);
                     Console.WriteLine("\n\n\n1) Sorry. Been a long trip. I'll stay in line.\n2) Fight the guard.\n3) Leave the city.");
@@ -360,7 +357,6 @@ namespace SkyrimCombat
                         Console.ReadLine();
                         enemyID = "Nazeem";
                         playerInfo = CombatManager(characterFilePath, flee, playerEXP, savePoint);
-
                     }
                     else if (action == "2")
                     {
@@ -372,15 +368,12 @@ namespace SkyrimCombat
                         Console.ReadLine();
                         enemyID = "Nazeem";
                         playerInfo = CombatManager(characterFilePath, flee, playerEXP, savePoint);
-
                     }
                     else if (action == "3")
                     {
                         Console.WriteLine("You leave the city and are eaten by a dragon.");
                         Environment.Exit(0);
-
                     }
-
                 }
                 else if (action == "3")
                 {
@@ -392,7 +385,6 @@ namespace SkyrimCombat
                     Console.ReadLine();
                     enemyID = "Nazeem";
                     playerInfo = CombatManager(characterFilePath, flee, playerEXP, savePoint);
-
                 }
                 else if (action == "4")
                 {
@@ -404,7 +396,6 @@ namespace SkyrimCombat
                     Console.ReadLine();
                     enemyID = "Nazeem";
                     playerInfo = CombatManager(characterFilePath, flee, playerEXP, savePoint);
-
                 }
                 else if (action == "5")
                 {
@@ -441,7 +432,6 @@ namespace SkyrimCombat
                                 List<string> list = new List<string>();
                                 list.Add(playerName + "," + playerHealth + "," + playerAttack + "," + savePoint + "," + playerEXP);
                                 File.WriteAllLines(characterFilePath, list);
-
                             }
                             else
                             {
