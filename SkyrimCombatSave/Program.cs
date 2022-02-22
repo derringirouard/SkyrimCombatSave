@@ -21,9 +21,9 @@ namespace SkyrimCombat
             File.WriteAllLines(characterFilePath, list);
             return list;
         }
-        static List<string> CombatManager(string characterFilePath, bool flee, int playerEXP, string savePoint) //Method to initiate and handle combat until either player or enemy health reaches 0
+        static List<string> CombatManager(string characterFilePath, bool flee, int playerEXP, string savePoint, SkyrimCombatSave.Enemy.Enemy enemy) //Method to initiate and handle combat until either player or enemy health reaches 0
         {
-            SkyrimCombatSave.Enemy.Enemy enemy = new SkyrimCombatSave.Enemy.Wolf();
+            
             List<string> playerInfo = new List<string>(); //Create list to hold player data
             foreach (string line in System.IO.File.ReadLines(characterFilePath)) //Goes through lines of player data
             {
@@ -245,10 +245,10 @@ namespace SkyrimCombat
 
             if (savePoint == "0")
             {
-                Console.WriteLine("You step out of a cave entrance onto the top of a mountain. A dragon flies overhead toward the east \nand a path lays before you heading north. What do you do?");
+                Console.WriteLine("You step out of a cave entrance onto the top of a mountain. A dragon flies overhead toward the\nand a path lays before you. What do you do?");
                 Console.WriteLine("\n\n\n1) Follow the path.");
                 Console.WriteLine("2) Engage the dragon.");
-                Console.WriteLine("3) Try to take a shortcut down the east side of the mountain.");
+                Console.WriteLine("3) Try to take a shortcut down the side of the mountain.");
                 action = Console.ReadLine().ToLower();
 
                 if (action == "1" || action == "path")
@@ -258,8 +258,9 @@ namespace SkyrimCombat
                 }
                 else if (action == "2")
                 {
+                    SkyrimCombatSave.Enemy.Enemy enemy = new SkyrimCombatSave.Enemy.Dragon();
                     enemyID = "Dragon";
-                    CombatManager(characterFilePath, flee, playerEXP, savePoint);
+                    CombatManager(characterFilePath, flee, playerEXP, savePoint, enemy);
                 }
                 else if (action == "3")
                 {
@@ -286,10 +287,12 @@ namespace SkyrimCombat
                     int thisRoll = fleeAttempt.Next(0, 10);
                     if (thisRoll < 9)
                     {
+                        SkyrimCombatSave.Enemy.Enemy enemy = new SkyrimCombatSave.Enemy.Wolf();
                         Console.WriteLine("Failed to hide!");
                         Thread.Sleep(1000);
+
                         enemyID = "Wolf";
-                        CombatManager(characterFilePath, flee, playerEXP, savePoint);
+                        CombatManager(characterFilePath, flee, playerEXP, savePoint, enemy);
                     }
                     else
                     {
@@ -299,7 +302,8 @@ namespace SkyrimCombat
                 else if (action == "2")
                 {
                     enemyID = "Wolf";
-                    CombatManager(characterFilePath, flee, playerEXP, savePoint);
+                    SkyrimCombatSave.Enemy.Enemy enemy = new SkyrimCombatSave.Enemy.Wolf();
+                    CombatManager(characterFilePath, flee, playerEXP, savePoint, enemy);
                 }
                 else if (action == "3")
                 {
@@ -319,7 +323,8 @@ namespace SkyrimCombat
                 Console.WriteLine("Another wolf appears!");
                 enemyID = "Wolf";
                 Thread.Sleep(1000);
-                CombatManager(characterFilePath, flee, playerEXP, savePoint);
+                SkyrimCombatSave.Enemy.Enemy enemy = new SkyrimCombatSave.Enemy.Wolf();
+                CombatManager(characterFilePath, flee, playerEXP, savePoint, enemy);
                 savePoint = "2";
             }
 
@@ -328,7 +333,7 @@ namespace SkyrimCombat
                 Console.Clear();
                 Console.WriteLine("You approach a walled off city. As you approach a guard stops you.");
                 Console.WriteLine("Halt. What business do you have in the city?");
-                Console.WriteLine("\n\n\n1) I'm a businessman here to peddle my wares.\n2) My business is my business only.\n3) I'm a traveller. Was hoping to aquire some gear here.\n4) How dare you talk to me that way? (Attack him)\n5) The city doesn't interest you. Go explor the wilderness.");
+                Console.WriteLine("\n\n\n1) I'm a businessman here to peddle my wares.\n2) My business is my business only.\n3) I'm a traveller. Was hoping to aquire some gear here.\n4) How dare you talk to me that way? (Attack him)\n5) The city doesn't interest you. Go explore the wilderness.");
                 action = Console.ReadLine();
                 if (action == "1")
                 {
@@ -338,8 +343,9 @@ namespace SkyrimCombat
                     Console.WriteLine("Do you get to the cloud district often? (He looks you over) Oh...of course you don't.");
                     Console.WriteLine("\n\n\n1) Attack him\n2) Attack him\n3) Attack him\n4) Attack him");
                     Console.ReadLine();
+                    SkyrimCombatSave.Enemy.Enemy enemy = new SkyrimCombatSave.Enemy.Nazeem();
                     enemyID = "Nazeem";
-                    CombatManager(characterFilePath, flee, playerEXP, savePoint);
+                    CombatManager(characterFilePath, flee, playerEXP, savePoint, enemy);
                 }
                 else if (action == "2")
                 {
@@ -356,18 +362,21 @@ namespace SkyrimCombat
                         Console.WriteLine("\n\n\n1) Attack him\n2) Attack him\n3) Attack him\n4) Attack him");
                         Console.ReadLine();
                         enemyID = "Nazeem";
-                        playerInfo = CombatManager(characterFilePath, flee, playerEXP, savePoint);
+                        SkyrimCombatSave.Enemy.Enemy enemy = new SkyrimCombatSave.Enemy.Nazeem();
+                        CombatManager(characterFilePath, flee, playerEXP, savePoint, enemy);
                     }
                     else if (action == "2")
                     {
                         enemyID = "Guard";
-                        playerInfo = CombatManager(characterFilePath, flee, playerEXP, savePoint);
+                        SkyrimCombatSave.Enemy.Enemy enemy = new SkyrimCombatSave.Enemy.Guard();
+                        CombatManager(characterFilePath, flee, playerEXP, savePoint, enemy);
                         Console.WriteLine("You bust open the front gate. A surprised citizen dressed in higher end robes addresses you.");
                         Console.WriteLine("Do you get to the cloud district often? (He looks you over) Oh...of course you don't.");
                         Console.WriteLine("\n\n\n1) Attack him\n2) Attack him\n3) Attack him\n4) Attack him");
                         Console.ReadLine();
                         enemyID = "Nazeem";
-                        playerInfo = CombatManager(characterFilePath, flee, playerEXP, savePoint);
+                        enemy = new SkyrimCombatSave.Enemy.Nazeem();
+                        CombatManager(characterFilePath, flee, playerEXP, savePoint, enemy);
                     }
                     else if (action == "3")
                     {
@@ -384,18 +393,21 @@ namespace SkyrimCombat
                     Console.WriteLine("\n\n\n1) Attack him\n2) Attack him\n3) Attack him\n4) Attack him");
                     Console.ReadLine();
                     enemyID = "Nazeem";
-                    playerInfo = CombatManager(characterFilePath, flee, playerEXP, savePoint);
+                    SkyrimCombatSave.Enemy.Enemy enemy = new SkyrimCombatSave.Enemy.Nazeem();
+                    CombatManager(characterFilePath, flee, playerEXP, savePoint, enemy);
                 }
                 else if (action == "4")
                 {
                     enemyID = "Guard";
-                    playerInfo = CombatManager(characterFilePath, flee, playerEXP, savePoint);
+                    SkyrimCombatSave.Enemy.Enemy enemy = new SkyrimCombatSave.Enemy.Guard();
+                    CombatManager(characterFilePath, flee, playerEXP, savePoint, enemy);
                     Console.WriteLine("You bust open the front gate. A surprised citizen dressed in higher end robes addresses you.");
                     Console.WriteLine("Do you get to the cloud district often? (He looks you over) Oh...of course you don't.");
                     Console.WriteLine("\n\n\n1) Attack him\n2) Attack him\n3) Attack him\n4) Attack him");
                     Console.ReadLine();
                     enemyID = "Nazeem";
-                    playerInfo = CombatManager(characterFilePath, flee, playerEXP, savePoint);
+                    enemy = new SkyrimCombatSave.Enemy.Nazeem();
+                    CombatManager(characterFilePath, flee, playerEXP, savePoint, enemy);
                 }
                 else if (action == "5")
                 {
@@ -409,9 +421,27 @@ namespace SkyrimCombat
                         Console.WriteLine("Current exp while: " + playerEXP);
                         Random random = new Random();
                         int nextEnemyInt = random.Next(0, 4);
-                        string nextEnemy = Convert.ToString(nextEnemyInt);
-                        enemyID = nextEnemy;
-                        playerInfo = CombatManager(characterFilePath, flee, playerEXP, savePoint);
+                        if(nextEnemyInt == 0)
+                        {
+                            SkyrimCombatSave.Enemy.Enemy enemy = new SkyrimCombatSave.Enemy.Wolf();
+                            CombatManager(characterFilePath, flee, playerEXP, savePoint, enemy);
+                        }
+                        else if(nextEnemyInt == 1)
+                        {
+                            SkyrimCombatSave.Enemy.Enemy enemy = new SkyrimCombatSave.Enemy.Mudcrab();
+                            CombatManager(characterFilePath, flee, playerEXP, savePoint, enemy);
+                        }
+                        else if(nextEnemyInt == 2)
+                        {
+                            SkyrimCombatSave.Enemy.Enemy enemy = new SkyrimCombatSave.Enemy.Bandit();
+                            CombatManager(characterFilePath, flee, playerEXP, savePoint, enemy);
+                        }
+                        else if(nextEnemyInt == 3)
+                        {
+                            SkyrimCombatSave.Enemy.Enemy enemy = new SkyrimCombatSave.Enemy.Dragon();
+                            CombatManager(characterFilePath, flee, playerEXP, savePoint, enemy);
+                        }
+                        
                         Console.WriteLine("Do you want to keep fighting? (y/n)");
                         Console.WriteLine(playerInfo[4]);
                         action = Console.ReadLine().ToLower();
