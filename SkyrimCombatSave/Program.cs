@@ -9,32 +9,26 @@ namespace SkyrimCombat
 
     class Program
     {
-        Enemy.Enemy enemy = new SkyrimCombatSave.Enemy.Wolf();
+        SkyrimCombatSave.Enemy.Enemy enemy = new SkyrimCombatSave.Enemy.Wolf();
         static List<string> CombatManager(string characterFilePath, bool flee, int playerEXP, string savePoint) //Method to initiate and handle combat until either player or enemy health reaches 0
         {
             List<string> playerInfo = new List<string>(); //Create list to hold player data
             foreach (string line in System.IO.File.ReadLines(characterFilePath)) //Goes through lines of player data
             {
                 playerInfo = line.Split(",").ToList(); //Divides player data into usable data for variables
-
             }
-
             //Assignment of player list values to variables
-
             string playerName = playerInfo[0];
             string playerHealthString = playerInfo[1];
             int playerHealth = Convert.ToInt32(playerHealthString);
             string playerAttackString = playerInfo[2];
             int playerAttack = Convert.ToInt32(playerAttackString);
             playerEXP = Convert.ToInt32(playerInfo[4]);
-
             //End of player info retrieval 
            
-
             Console.Clear();
             Console.WriteLine("You have entered combat with the " + enemy.Name + "!\n");
             while (enemy.HP > 0 && playerHealth > 0 && flee == false) //Perform the following while Player and Enemy are still alive
-
             {
                 Console.WriteLine("What do you want to do?");
                 Console.WriteLine("1) Attack");
@@ -66,7 +60,6 @@ namespace SkyrimCombat
                     {
                         playerHealth = enemy.Attack(playerHealth);
                     }
-
                 }
                 else if (action == "2" || action == "flee")
                 {
@@ -87,10 +80,7 @@ namespace SkyrimCombat
                         Thread.Sleep(2000);
                         Console.Clear();
                     }
-
                 }
-
-
             }
             if (playerHealth <= 0)
             {
@@ -98,11 +88,10 @@ namespace SkyrimCombat
                 Console.WriteLine("Press any key to continue...");
                 Console.ReadKey();
                 Environment.Exit(0);
-
             }
-            else if (enemyHealth <= 0)
+            else if (enemy.HP <= 0)
             {
-                Console.WriteLine(enemyName + " has been defeated!");
+                Console.WriteLine(enemy.Name + " has been defeated!");
                 Thread.Sleep(1000);
                 Console.WriteLine("Current exp: " + playerEXP);
                 playerEXP += enemy.EXP;
@@ -129,23 +118,20 @@ namespace SkyrimCombat
                     playerAttack += 5;
                     File.WriteAllText(characterFilePath, string.Empty);
                     list.Add(playerName);
-                    string playerHealthstring = Convert.ToString(playerHealth);
+                    playerHealthstring = Convert.ToString(playerHealth);
                     list.Add(playerHealthstring);
-                    string playerAttackstring = Convert.ToString(playerAttack);
+                    playerAttackstring = Convert.ToString(playerAttack);
                     list.Add(playerAttackstring);
                     list.Add(savePoint);
-                    string playerEXPstring = Convert.ToString(playerEXP);
+                    playerEXPstring = Convert.ToString(playerEXP);
                     list.Add(playerEXPstring);
                     list.Add(playerName + "," + playerHealth + "," + playerAttack + "," + savePoint + "," + playerEXP);
                     File.WriteAllLines(characterFilePath, list);
                     return list;
-
                 }
 
                 flee = false;
                 return playerInfo;
-
-
             } return playerInfo;
         }
 
@@ -154,7 +140,6 @@ namespace SkyrimCombat
                 Console.WriteLine("Press enter to continue");
                 Console.ReadKey();
             }
-
             static void SaveGame(string savePoint, string characterFilePath, string playerName, int playerHealth, int playerAttack, int playerEXP)
             {
                 Console.WriteLine("Would you like to save? (y/n)");
@@ -186,9 +171,7 @@ namespace SkyrimCombat
             foreach (string line in System.IO.File.ReadLines(characterFilePath))
             {
                 playerInfo = line.Split(",").ToList();
-
             }
-
             string playerName = playerInfo[0];
             string playerHealthString = playerInfo[1];
             int playerHealth = Convert.ToInt32(playerHealthString);
@@ -197,7 +180,6 @@ namespace SkyrimCombat
             string savePoint = playerInfo[3];
             string playerEXPString = playerInfo[4];
             int playerEXP = Convert.ToInt32(playerEXPString);
-
 
             Console.WriteLine("        ....            ..       ..    ..        ..   .......     ..  ...              ...");
             Thread.Sleep(250);
@@ -222,13 +204,10 @@ namespace SkyrimCombat
             Console.WriteLine("         ...            ..       ..         ..        ..      ..  ..  ..                ..");
             Console.WriteLine("\n                                      A Text Adventure");
             Console.WriteLine("\n                                     A Title by Snoopert                                  ");
-
-
             Console.WriteLine("\nWhat do you want to do?");
             Console.WriteLine("\n\n\n1) Start New Game");
             Console.WriteLine("2) Continue");
             action = Console.ReadLine();
-
 
             if (action == "1")
             {
@@ -242,9 +221,7 @@ namespace SkyrimCombat
                 foreach (string line in System.IO.File.ReadLines(characterFilePath))
                 {
                     playerInfo = line.Split(",").ToList();
-
                 }
-
                 playerName = playerInfo[0];
                 savePoint = playerInfo[3];
                 Console.Clear();
@@ -261,11 +238,9 @@ namespace SkyrimCombat
                 foreach (string line in System.IO.File.ReadLines(characterFilePath))
                 {
                     playerInfo = line.Split(",").ToList();
-
                 }
                 Console.Clear();
             }
-
 
             if (savePoint == "0")
             {
@@ -279,7 +254,6 @@ namespace SkyrimCombat
                 {
                     Console.WriteLine("You walk down the path. Admiring the blooming flowers and greenery. You hear rustling in the distance.");
                     Next();
-
                 }
                 else if (action == "2")
                 {
@@ -304,7 +278,6 @@ namespace SkyrimCombat
 
                 if (action == "1" || action == "path")
                 {
-
                     Console.WriteLine("You attempt to hide.");
                     Thread.Sleep(1500);
                     Random fleeAttempt = new Random();
@@ -315,7 +288,6 @@ namespace SkyrimCombat
                         Thread.Sleep(1000);
                         enemyID = "Wolf";
                         playerInfo = CombatManager(characterFilePath, flee, playerEXP, savePoint);
-
                     }
                     else
                     {
