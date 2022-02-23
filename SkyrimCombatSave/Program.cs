@@ -84,6 +84,7 @@ namespace SkyrimCombat
                         Console.WriteLine("Failed to flee!");
                         Thread.Sleep(750);
                         playerHealth = enemy.Attack(playerHealth);
+                        UpdatePlayerInfo(characterFilePath, playerName, playerHealth, playerAttack, playerEXP, savePoint);
                     }
                     else
                     {
@@ -91,6 +92,7 @@ namespace SkyrimCombat
                         Console.WriteLine(playerName + " successfully flees!");
                         Thread.Sleep(2000);
                         Console.Clear();
+                        UpdatePlayerInfo(characterFilePath, playerName, playerHealth, playerAttack, playerEXP, savePoint);
                     }
                 }
             }
@@ -260,7 +262,7 @@ namespace SkyrimCombat
                 {
                     SkyrimCombatSave.Enemy.Enemy enemy = new SkyrimCombatSave.Enemy.Dragon();
                     enemyID = "Dragon";
-                    CombatManager(characterFilePath, flee, playerEXP, savePoint, enemy);
+                    playerInfo = CombatManager(characterFilePath, flee, playerEXP, savePoint, enemy);
                 }
                 else if (action == "3")
                 {
@@ -292,7 +294,7 @@ namespace SkyrimCombat
                         Thread.Sleep(1000);
 
                         enemyID = "Wolf";
-                        CombatManager(characterFilePath, flee, playerEXP, savePoint, enemy);
+                        playerInfo = CombatManager(characterFilePath, flee, playerEXP, savePoint, enemy);
                     }
                     else
                     {
@@ -303,7 +305,7 @@ namespace SkyrimCombat
                 {
                     enemyID = "Wolf";
                     SkyrimCombatSave.Enemy.Enemy enemy = new SkyrimCombatSave.Enemy.Wolf();
-                    CombatManager(characterFilePath, flee, playerEXP, savePoint, enemy);
+                    playerInfo = CombatManager(characterFilePath, flee, playerEXP, savePoint, enemy);
                 }
                 else if (action == "3")
                 {
@@ -324,7 +326,7 @@ namespace SkyrimCombat
                 enemyID = "Wolf";
                 Thread.Sleep(1000);
                 SkyrimCombatSave.Enemy.Enemy enemy = new SkyrimCombatSave.Enemy.Wolf();
-                CombatManager(characterFilePath, flee, playerEXP, savePoint, enemy);
+                playerInfo = CombatManager(characterFilePath, flee, playerEXP, savePoint, enemy);
                 savePoint = "2";
             }
 
