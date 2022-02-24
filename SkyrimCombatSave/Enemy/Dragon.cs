@@ -8,7 +8,7 @@ namespace SkyrimCombatSave.Enemy
 {
     class Dragon : Enemy
     {
-        public Dragon() : base("Dragon", 1000, 95, 750)
+        public Dragon() : base("Dragon", 1000, 75, 750)
         {
         }
     }

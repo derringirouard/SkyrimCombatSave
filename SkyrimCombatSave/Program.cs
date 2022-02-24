@@ -17,6 +17,7 @@ namespace SkyrimCombat
             string playerAttackString = Convert.ToString(playerAttack);
             string playerEXPString = Convert.ToString(playerEXP);
             string playerMaxHealthString = Convert.ToString(playerMaxHealth);
+            Console.WriteLine("EXP in UpdatePlayerInfo: " + playerEXP);
             list.Add(playerName + "," + playerMaxHealth + "," + playerHealth + "," + playerAttack + "," + savePoint + "," + playerEXP);
             File.WriteAllLines(characterFilePath, list);//Writes latest player data to save file
         }
@@ -86,9 +87,6 @@ namespace SkyrimCombat
                         Thread.Sleep(750);
                         playerHealth = enemy.Attack(playerHealth);
                         UpdatePlayerInfo(characterFilePath, playerName, playerMaxHealth, playerHealth, playerAttack, playerEXP, savePoint);
-
-                        Console.WriteLine("Current player EXP in UpdatePlayerInfo: " + playerEXP);
-                        Next();
                     }
                     else
                     {
@@ -429,12 +427,13 @@ namespace SkyrimCombat
                     bool keepFighting = true;
                     while (keepFighting == true)
                     {
-                        Console.WriteLine("Current exp while: " + playerEXP);
                         Random random = new Random();
-                        int nextEnemyInt = random.Next(0, 6);
+                        int nextEnemyInt = random.Next(0, 2);
                         if(nextEnemyInt == 0)
                         {
                             SkyrimCombatSave.Enemy.Enemy enemy = new SkyrimCombatSave.Enemy.Wolf();
+                            Console.WriteLine(playerEXP);
+                            Next();
                             CombatManager(characterFilePath, flee, playerEXP, savePoint, enemy, playerMaxHealth);
                         }
                         else if(nextEnemyInt == 1)
@@ -447,16 +446,16 @@ namespace SkyrimCombat
                             SkyrimCombatSave.Enemy.Enemy enemy = new SkyrimCombatSave.Enemy.Bandit();
                             CombatManager(characterFilePath, flee, playerEXP, savePoint, enemy, playerMaxHealth);
                         }
-                        else if(nextEnemyInt == 3)
-                        {
-                            SkyrimCombatSave.Enemy.Enemy enemy = new SkyrimCombatSave.Enemy.Dragon();
-                            CombatManager(characterFilePath, flee, playerEXP, savePoint, enemy, playerMaxHealth);
-                        }
-                        else
-                        {
-                            SkyrimCombatSave.Enemy.Enemy enemy = new SkyrimCombatSave.Enemy.Mudcrab();
-                            CombatManager(characterFilePath, flee, playerEXP, savePoint, enemy, playerMaxHealth);
-                        }
+                        //else if(nextEnemyInt == 3)
+                        //{
+                        //    SkyrimCombatSave.Enemy.Enemy enemy = new SkyrimCombatSave.Enemy.Dragon();
+                        //    CombatManager(characterFilePath, flee, playerEXP, savePoint, enemy, playerMaxHealth);
+                        //}
+                        //else
+                        //{
+                        //    SkyrimCombatSave.Enemy.Enemy enemy = new SkyrimCombatSave.Enemy.Mudcrab();
+                        //    CombatManager(characterFilePath, flee, playerEXP, savePoint, enemy, playerMaxHealth);
+                        //}
                         
                         Console.WriteLine("Do you want to keep fighting? (y/n)");
                         action = Console.ReadLine().ToLower();
@@ -477,6 +476,7 @@ namespace SkyrimCombat
                             {
                                 Console.WriteLine("You find nothing of value.");
                                 Thread.Sleep(1000);
+                                UpdatePlayerInfo(characterFilePath, playerName, playerMaxHealth, playerHealth, playerAttack, playerEXP, savePoint);
                             }
                         }
                         else
