@@ -9,19 +9,18 @@ namespace SkyrimCombat
 
     class Program
     {
-        static List<string> UpdatePlayerInfo (string characterFilePath, string playerName, int playerHealth, int playerAttack, int playerEXP, string savePoint)
+        static void UpdatePlayerInfo (string characterFilePath, string playerName, int playerMaxHealth, int playerHealth, int playerAttack, int playerEXP, string savePoint)
         {
             File.WriteAllText(characterFilePath, string.Empty);
             List<string> list = new List<string>();
-            List<string> newPlayerInfo = new List<string>();
-            string playerHealthstring = Convert.ToString(playerHealth);
-            string playerAttackstring = Convert.ToString(playerAttack);
-            string playerEXPstring = Convert.ToString(playerEXP);
-            list.Add(playerName + "," + playerHealth + "," + playerAttack + "," + savePoint + "," + playerEXP);
-            File.WriteAllLines(characterFilePath, list);
-            return list;
+            string playerHealthString = Convert.ToString(playerHealth);
+            string playerAttackString = Convert.ToString(playerAttack);
+            string playerEXPString = Convert.ToString(playerEXP);
+            string playerMaxHealthString = Convert.ToString(playerMaxHealth);
+            list.Add(playerName + "," + playerMaxHealth + "," + playerHealth + "," + playerAttack + "," + savePoint + "," + playerEXP);
+            File.WriteAllLines(characterFilePath, list);//Writes latest player data to save file
         }
-        static List<string> CombatManager(string characterFilePath, bool flee, int playerEXP, string savePoint, SkyrimCombatSave.Enemy.Enemy enemy) //Method to initiate and handle combat until either player or enemy health reaches 0
+        static List<string> CombatManager(string characterFilePath, bool flee, int playerEXP, string savePoint, SkyrimCombatSave.Enemy.Enemy enemy, int playerMaxHealth) //Method to initiate and handle combat until either player or enemy health reaches 0
         {
             
             List<string> playerInfo = new List<string>(); //Create list to hold player data
@@ -31,11 +30,13 @@ namespace SkyrimCombat
             }
             //Assignment of player list values to variables
             string playerName = playerInfo[0];
-            string playerHealthString = playerInfo[1];
+            string playerHealthString = playerInfo[2];
             int playerHealth = Convert.ToInt32(playerHealthString);
-            string playerAttackString = playerInfo[2];
+            string playerAttackString = playerInfo[3];
             int playerAttack = Convert.ToInt32(playerAttackString);
-            playerEXP = Convert.ToInt32(playerInfo[4]);
+            playerEXP = Convert.ToInt32(playerInfo[5]);
+            string playerMaxHealthString = playerInfo[1];
+            playerMaxHealth = Convert.ToInt32(playerMaxHealthString);
             //End of player info retrieval 
            
             Console.Clear();
@@ -84,7 +85,10 @@ namespace SkyrimCombat
                         Console.WriteLine("Failed to flee!");
                         Thread.Sleep(750);
                         playerHealth = enemy.Attack(playerHealth);
-                        UpdatePlayerInfo(characterFilePath, playerName, playerHealth, playerAttack, playerEXP, savePoint);
+                        UpdatePlayerInfo(characterFilePath, playerName, playerMaxHealth, playerHealth, playerAttack, playerEXP, savePoint);
+
+                        Console.WriteLine("Current player EXP in UpdatePlayerInfo: " + playerEXP);
+                        Next();
                     }
                     else
                     {
@@ -92,7 +96,7 @@ namespace SkyrimCombat
                         Console.WriteLine(playerName + " successfully flees!");
                         Thread.Sleep(2000);
                         Console.Clear();
-                        UpdatePlayerInfo(characterFilePath, playerName, playerHealth, playerAttack, playerEXP, savePoint);
+                        UpdatePlayerInfo(characterFilePath, playerName, playerMaxHealth, playerHealth, playerAttack, playerEXP, savePoint);
                     }
                 }
             }
@@ -112,14 +116,16 @@ namespace SkyrimCombat
                 Console.WriteLine("Current exp: " + playerEXP);
                 Next();
                 playerInfo[4] = Convert.ToString(playerEXP);
-                UpdatePlayerInfo(characterFilePath, playerName, playerHealth, playerAttack, playerEXP, savePoint);
+                UpdatePlayerInfo(characterFilePath, playerName, playerMaxHealth, playerHealth, playerAttack, playerEXP, savePoint);
                 if (playerEXP > 1000)
                 {
                     playerEXP -= 1000;
-                    Console.WriteLine("You have leveled up! Your attack has increased!");
+                    Console.WriteLine("You have leveled up! Your attack and max health have increased!");
                     playerAttack += 5;
-                    List<string> list = UpdatePlayerInfo(characterFilePath, playerName, playerHealth, playerAttack, playerEXP, savePoint);
-                    return list;
+                    playerMaxHealth += 15;
+                    playerHealth += 15;
+                    UpdatePlayerInfo(characterFilePath, playerName, playerMaxHealth, playerHealth, playerAttack, playerEXP, savePoint);
+                    Next();
                 }
 
                 flee = false;
@@ -178,13 +184,15 @@ namespace SkyrimCombat
             }
             
             string playerName = playerInfo[0];
-            string playerHealthString = playerInfo[1];
+            string playerHealthString = playerInfo[2];
             int playerHealth = Convert.ToInt32(playerHealthString);
-            string playerAttackString = playerInfo[2];
+            string playerAttackString = playerInfo[3];
             int playerAttack = Convert.ToInt32(playerAttackString);
-            string savePoint = playerInfo[3];
-            string playerEXPString = playerInfo[4];
+            string savePoint = playerInfo[4];
+            string playerEXPString = playerInfo[5];
             int playerEXP = Convert.ToInt32(playerEXPString);
+            string playerMaxHealthString = playerInfo[1];
+            int playerMaxHealth = Convert.ToInt32(playerMaxHealthString);
 
             Console.WriteLine("        ....            ..       ..    ..        ..   .......     ..  ...              ...");
             Thread.Sleep(100);
@@ -221,17 +229,18 @@ namespace SkyrimCombat
                 string characterName = Console.ReadLine();
                 File.WriteAllText(characterFilePath, string.Empty);
                 List<string> list = new List<string>();
-                list.Add(characterName + ",100,15,0,0");
+                list.Add(characterName + ",100,100,15,0,0");
                 File.WriteAllLines(characterFilePath, list);
                 foreach (string line in System.IO.File.ReadLines(characterFilePath))
                 {
                     playerInfo = line.Split(",").ToList();
                 }
                 playerName = playerInfo[0];
-                savePoint = playerInfo[3];
-                playerAttack = Convert.ToInt32(playerInfo[2]);
-                playerHealth = Convert.ToInt32(playerInfo[1]);
-                playerEXP = Convert.ToInt32(playerInfo[4]);
+                savePoint = playerInfo[4];
+                playerAttack = Convert.ToInt32(playerInfo[3]);
+                playerHealth = Convert.ToInt32(playerInfo[2]);
+                playerEXP = Convert.ToInt32(playerInfo[5]);
+                playerMaxHealth = Convert.ToInt32(playerInfo[1]);
                 Console.Clear();
             }
             else if (action == "2")
@@ -262,7 +271,7 @@ namespace SkyrimCombat
                 {
                     SkyrimCombatSave.Enemy.Enemy enemy = new SkyrimCombatSave.Enemy.Dragon();
                     enemyID = "Dragon";
-                    playerInfo = CombatManager(characterFilePath, flee, playerEXP, savePoint, enemy);
+                    playerInfo = CombatManager(characterFilePath, flee, playerEXP, savePoint, enemy, playerMaxHealth);
                 }
                 else if (action == "3")
                 {
@@ -270,7 +279,7 @@ namespace SkyrimCombat
                     Console.WriteLine("You attempt to make your way down the rough terrain. After hopping over a few rocks and tripping in some \nbrush, you tumble a few dozen feet onto a familiar path taking 5 damage.");
                     playerHealth -= 5;
                     Console.WriteLine("Current HP: " + playerHealth);
-                    UpdatePlayerInfo(characterFilePath, playerName, playerHealth, playerAttack, playerEXP, savePoint);
+                    UpdatePlayerInfo(characterFilePath, playerName, playerMaxHealth, playerHealth, playerAttack, playerEXP, savePoint);
                     Next();
                 }
 
@@ -294,7 +303,7 @@ namespace SkyrimCombat
                         Thread.Sleep(1000);
 
                         enemyID = "Wolf";
-                        playerInfo = CombatManager(characterFilePath, flee, playerEXP, savePoint, enemy);
+                        playerInfo = CombatManager(characterFilePath, flee, playerEXP, savePoint, enemy, playerMaxHealth);
                     }
                     else
                     {
@@ -305,7 +314,7 @@ namespace SkyrimCombat
                 {
                     enemyID = "Wolf";
                     SkyrimCombatSave.Enemy.Enemy enemy = new SkyrimCombatSave.Enemy.Wolf();
-                    playerInfo = CombatManager(characterFilePath, flee, playerEXP, savePoint, enemy);
+                    playerInfo = CombatManager(characterFilePath, flee, playerEXP, savePoint, enemy, playerMaxHealth);
                 }
                 else if (action == "3")
                 {
@@ -313,7 +322,7 @@ namespace SkyrimCombat
                     Console.WriteLine("You attempt to make your way down the rough terrain. After hopping over a few rocks and tripping in some \nbrush, you tumble a few dozen feet onto a path near a river taking 5 damage.");
                     playerHealth -= 5;
                     Console.WriteLine("Current HP: " + playerHealth);
-                    UpdatePlayerInfo(characterFilePath, playerName, playerHealth, playerAttack, playerEXP, savePoint);
+                    UpdatePlayerInfo(characterFilePath, playerName, playerMaxHealth, playerHealth, playerAttack, playerEXP, savePoint);
                     Console.ReadKey();
                 }
                 savePoint = "1";
@@ -326,7 +335,7 @@ namespace SkyrimCombat
                 enemyID = "Wolf";
                 Thread.Sleep(1000);
                 SkyrimCombatSave.Enemy.Enemy enemy = new SkyrimCombatSave.Enemy.Wolf();
-                playerInfo = CombatManager(characterFilePath, flee, playerEXP, savePoint, enemy);
+                playerInfo = CombatManager(characterFilePath, flee, playerEXP, savePoint, enemy, playerMaxHealth);
                 savePoint = "2";
             }
 
@@ -347,7 +356,7 @@ namespace SkyrimCombat
                     Console.ReadLine();
                     SkyrimCombatSave.Enemy.Enemy enemy = new SkyrimCombatSave.Enemy.Nazeem();
                     enemyID = "Nazeem";
-                    CombatManager(characterFilePath, flee, playerEXP, savePoint, enemy);
+                    CombatManager(characterFilePath, flee, playerEXP, savePoint, enemy, playerMaxHealth);
                 }
                 else if (action == "2")
                 {
@@ -365,20 +374,20 @@ namespace SkyrimCombat
                         Console.ReadLine();
                         enemyID = "Nazeem";
                         SkyrimCombatSave.Enemy.Enemy enemy = new SkyrimCombatSave.Enemy.Nazeem();
-                        CombatManager(characterFilePath, flee, playerEXP, savePoint, enemy);
+                        CombatManager(characterFilePath, flee, playerEXP, savePoint, enemy, playerMaxHealth);
                     }
                     else if (action == "2")
                     {
                         enemyID = "Guard";
                         SkyrimCombatSave.Enemy.Enemy enemy = new SkyrimCombatSave.Enemy.Guard();
-                        CombatManager(characterFilePath, flee, playerEXP, savePoint, enemy);
+                        CombatManager(characterFilePath, flee, playerEXP, savePoint, enemy, playerMaxHealth);
                         Console.WriteLine("You bust open the front gate. A surprised citizen dressed in higher end robes addresses you.");
                         Console.WriteLine("Do you get to the cloud district often? (He looks you over) Oh...of course you don't.");
                         Console.WriteLine("\n\n\n1) Attack him\n2) Attack him\n3) Attack him\n4) Attack him");
                         Console.ReadLine();
                         enemyID = "Nazeem";
                         enemy = new SkyrimCombatSave.Enemy.Nazeem();
-                        CombatManager(characterFilePath, flee, playerEXP, savePoint, enemy);
+                        CombatManager(characterFilePath, flee, playerEXP, savePoint, enemy, playerMaxHealth);
                     }
                     else if (action == "3")
                     {
@@ -396,20 +405,20 @@ namespace SkyrimCombat
                     Console.ReadLine();
                     enemyID = "Nazeem";
                     SkyrimCombatSave.Enemy.Enemy enemy = new SkyrimCombatSave.Enemy.Nazeem();
-                    CombatManager(characterFilePath, flee, playerEXP, savePoint, enemy);
+                    CombatManager(characterFilePath, flee, playerEXP, savePoint, enemy, playerMaxHealth);
                 }
                 else if (action == "4")
                 {
                     enemyID = "Guard";
                     SkyrimCombatSave.Enemy.Enemy enemy = new SkyrimCombatSave.Enemy.Guard();
-                    CombatManager(characterFilePath, flee, playerEXP, savePoint, enemy);
+                    CombatManager(characterFilePath, flee, playerEXP, savePoint, enemy, playerMaxHealth);
                     Console.WriteLine("You bust open the front gate. A surprised citizen dressed in higher end robes addresses you.");
                     Console.WriteLine("Do you get to the cloud district often? (He looks you over) Oh...of course you don't.");
                     Console.WriteLine("\n\n\n1) Attack him\n2) Attack him\n3) Attack him\n4) Attack him");
                     Console.ReadLine();
                     enemyID = "Nazeem";
                     enemy = new SkyrimCombatSave.Enemy.Nazeem();
-                    CombatManager(characterFilePath, flee, playerEXP, savePoint, enemy);
+                    CombatManager(characterFilePath, flee, playerEXP, savePoint, enemy, playerMaxHealth);
                 }
                 else if (action == "5")
                 {
@@ -422,47 +431,47 @@ namespace SkyrimCombat
                     {
                         Console.WriteLine("Current exp while: " + playerEXP);
                         Random random = new Random();
-                        int nextEnemyInt = random.Next(0, 4);
+                        int nextEnemyInt = random.Next(0, 6);
                         if(nextEnemyInt == 0)
                         {
                             SkyrimCombatSave.Enemy.Enemy enemy = new SkyrimCombatSave.Enemy.Wolf();
-                            CombatManager(characterFilePath, flee, playerEXP, savePoint, enemy);
+                            CombatManager(characterFilePath, flee, playerEXP, savePoint, enemy, playerMaxHealth);
                         }
                         else if(nextEnemyInt == 1)
                         {
                             SkyrimCombatSave.Enemy.Enemy enemy = new SkyrimCombatSave.Enemy.Mudcrab();
-                            CombatManager(characterFilePath, flee, playerEXP, savePoint, enemy);
+                            CombatManager(characterFilePath, flee, playerEXP, savePoint, enemy, playerMaxHealth);
                         }
                         else if(nextEnemyInt == 2)
                         {
                             SkyrimCombatSave.Enemy.Enemy enemy = new SkyrimCombatSave.Enemy.Bandit();
-                            CombatManager(characterFilePath, flee, playerEXP, savePoint, enemy);
+                            CombatManager(characterFilePath, flee, playerEXP, savePoint, enemy, playerMaxHealth);
                         }
                         else if(nextEnemyInt == 3)
                         {
                             SkyrimCombatSave.Enemy.Enemy enemy = new SkyrimCombatSave.Enemy.Dragon();
-                            CombatManager(characterFilePath, flee, playerEXP, savePoint, enemy);
+                            CombatManager(characterFilePath, flee, playerEXP, savePoint, enemy, playerMaxHealth);
+                        }
+                        else
+                        {
+                            SkyrimCombatSave.Enemy.Enemy enemy = new SkyrimCombatSave.Enemy.Mudcrab();
+                            CombatManager(characterFilePath, flee, playerEXP, savePoint, enemy, playerMaxHealth);
                         }
                         
                         Console.WriteLine("Do you want to keep fighting? (y/n)");
-                        Console.WriteLine(playerInfo[4]);
                         action = Console.ReadLine().ToLower();
                         if (action == "y")
                         {
-                            Console.WriteLine(playerInfo[4]);
                             Console.WriteLine("You search the area for something useful.");
                             Thread.Sleep(1000);
                             Random potionChance = new Random();
                             int potion = potionChance.Next(0, 4);
-                            if (potion == 1)
+                            if (potion == 2)
                             {
                                 Console.WriteLine("You found a potion! You are now at full health!");
                                 Thread.Sleep(1000);
-                                playerHealth = 100;
-                                File.WriteAllText(characterFilePath, string.Empty);
-                                List<string> list = new List<string>();
-                                list.Add(playerName + "," + playerHealth + "," + playerAttack + "," + savePoint + "," + playerEXP);
-                                File.WriteAllLines(characterFilePath, list);
+                                playerHealth = playerMaxHealth;
+                                UpdatePlayerInfo(characterFilePath, playerName, playerMaxHealth, playerHealth, playerAttack, playerEXP, savePoint);
                             }
                             else
                             {
