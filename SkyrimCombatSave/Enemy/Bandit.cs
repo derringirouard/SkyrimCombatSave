@@ -8,7 +8,7 @@ namespace SkyrimCombatSave.Enemy
 {
     class Bandit : Enemy
     {
-        public Bandit() : base("Bandit", 80, 15, 50)
+        public Bandit() : base("Bandit", 80, 15, 175)
         {
         }
     }
