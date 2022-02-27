@@ -243,50 +243,21 @@ namespace SkyrimCombat
                 return playerEXP;
             } return playerEXP;
         }
-
             static void Next()
             {
                 Console.WriteLine("Press enter to continue");
                 Console.ReadKey();
             }
-            //static void SaveGame(string savePoint, string characterFilePath, string playerName, int playerHealth, int playerAttack, int playerEXP)
-            //{
-            //    Console.WriteLine("Would you like to save? (y/n)");
-            //    string action = Console.ReadLine().ToLower();
-            //    if (action == "y")
-            //    {
-                    
-            //    List<string> playerInfo = new List<string>(); //Create list to hold player data
-            //    foreach (string line in System.IO.File.ReadLines(characterFilePath)) //Goes through lines of player data
-            //    {
-            //        playerInfo = line.Split(",").ToList(); //Divides player data into usable data for variables
-            //    }
-            //    //Assignment of player list values to variables
-            //    File.WriteAllText(characterFilePath, string.Empty);
-            //    File.WriteAllText(characterFilePath, string.Empty);
-            //    List<string> list = new List<string>();
-            //    List<string> newPlayerInfo = new List<string>();
-            //    string playerHealthstring = Convert.ToString(playerHealth);
-            //    string playerAttackstring = Convert.ToString(playerAttack);
-            //    string playerEXPstring = Convert.ToString(playerEXP);
-            //    list.Add(playerName + "," + playerHealth + "," + playerAttack + "," + savePoint + "," + playerEXP);
-            //    File.WriteAllLines(characterFilePath, list);
-            //        Console.WriteLine("Game saved!");
-            //        Next();
-            //    }
-            //}
 
         static void Main(string[] args)
         {
             string filePath = @"C:\Users\Node5600X\source\repos\SkyrimCombatSave\EnemyData.txt"; //Set file path of enemy data
             string characterFilePath = @"C:\Users\Node5600X\source\repos\SkyrimCombatSave\CharacterData.txt";
             string enemyID = "1)"; //Initialize variable to use to search EnemyData.txt for the enemy to battle
-            bool flee = false;
-            string action = string.Empty;
-
+            bool flee = false; //Variable used in CombatManager
+            string action = string.Empty; //Variable used to hold player input
 
             List<string> enemySets = new List<string>(File.ReadAllLines(filePath)); //Create list of enemy data pulled from EnemyData.txt
-
 
             List<string> playerInfo = new List<string>();
             foreach (string line in System.IO.File.ReadLines(characterFilePath))
@@ -460,7 +431,7 @@ namespace SkyrimCombat
                     Console.Clear();
                     Console.WriteLine("You approach a walled off city. As you approach a guard stops you.");
                     Console.WriteLine("Halt. What business do you have in the city?");
-                    Console.WriteLine("\n\n\n1) I'm a businessman here to peddle my wares.\n2) My business is my business only.\n3) I'm a traveller. Was hoping to aquire some gear here.\n4) How dare you talk to me that way? (Attack him)\n5) The city doesn't interest you. Go explore the wilderness.");
+                    Console.WriteLine("\n\n\n1) I'm a businessman here to peddle my wares.\n2) My business is my business only.\n3) I'm a traveller. Was hoping to find a place to rest.\n4) How dare you talk to me that way? (Attack him)\n5) The city doesn't interest you. Go explore the wilderness.");
                     action = Console.ReadLine();
                     if (action == "1")
                     {
@@ -522,6 +493,12 @@ namespace SkyrimCombat
                         enemyID = "Nazeem";
                         SkyrimCombatSave.Enemy.Enemy enemy = new SkyrimCombatSave.Enemy.Nazeem();
                         CombatManager(characterFilePath, flee, playerEXP, savePoint, enemy, playerMaxHealth, numberOfPotions);
+                        Console.WriteLine("Do you want to find a place to rest? (y/n)";
+                        action = Console.ReadLine();
+                        if(action == y)
+                        {
+
+                        }
                     }
                     else if (action == "4")
                     {
@@ -542,65 +519,7 @@ namespace SkyrimCombat
                         Console.WriteLine("You turn around and walk from where you came. Wandering though the wilderness.");
                         Next();
                         RandomEncounter(savePoint, characterFilePath, flee, action);
-
-                        //bool keepFighting = true;
-                        //while (keepFighting == true)
-                        //{
-                        //    Random random = new Random();
-                        //    int nextEnemyInt = random.Next(0, 100);
-                        //    if (nextEnemyInt <= 25)
-                        //    {
-                        //        SkyrimCombatSave.Enemy.Enemy enemy = new SkyrimCombatSave.Enemy.Wolf();
-                        //        playerEXP = CombatManager(characterFilePath, flee, playerEXP, savePoint, enemy, playerMaxHealth, numberOfPotions);
-                        //    }
-                        //    else if (nextEnemyInt > 25 && nextEnemyInt < 51)
-                        //    {
-                        //        SkyrimCombatSave.Enemy.Enemy enemy = new SkyrimCombatSave.Enemy.Mudcrab();
-                        //        CombatManager(characterFilePath, flee, playerEXP, savePoint, enemy, playerMaxHealth, numberOfPotions);
-                        //    }
-                        //    else if (nextEnemyInt > 50 && nextEnemyInt < 98)
-                        //    {
-                        //        SkyrimCombatSave.Enemy.Enemy enemy = new SkyrimCombatSave.Enemy.Bandit();
-                        //        CombatManager(characterFilePath, flee, playerEXP, savePoint, enemy, playerMaxHealth, numberOfPotions);
-                        //    }
-                        //    else if (nextEnemyInt > 97 && nextEnemyInt < 100)
-                        //    {
-                        //        SkyrimCombatSave.Enemy.Enemy enemy = new SkyrimCombatSave.Enemy.Dragon();
-                        //        CombatManager(characterFilePath, flee, playerEXP, savePoint, enemy, playerMaxHealth, numberOfPotions);
-                        //    }
-                        //    else
-                        //    {
-                        //        SkyrimCombatSave.Enemy.Enemy enemy = new SkyrimCombatSave.Enemy.Slime();
-                        //        CombatManager(characterFilePath, flee, playerEXP, savePoint, enemy, playerMaxHealth, numberOfPotions);
-                        //    }
-
-                        //    Console.WriteLine("Do you want to keep fighting? (y/n)");
-                        //    action = Console.ReadLine().ToLower();
-                        //    if (action == "y")
-                        //    {
-                        //        Console.WriteLine("You search the area for something useful.");
-                        //        Thread.Sleep(1000);
-                        //        Random potionChance = new Random();
-                        //        int potion = potionChance.Next(0, 4);
-                        //        if (potion == 2)
-                        //        {
-                        //            Console.WriteLine("You found a potion!");
-                        //            Thread.Sleep(1000);
-                        //            numberOfPotions++;
-                        //            UpdatePlayerInfo(characterFilePath, playerName, playerMaxHealth, playerHealth, playerAttack, playerEXP, savePoint, numberOfPotions);
-                        //        }
-                        //        else
-                        //        {
-                        //            Console.WriteLine("You find nothing of value.");
-                        //            Thread.Sleep(1000);
-                        //        }
-                        //    }
-                        //    else
-                        //    {
-                        //        keepFighting = false;
-                        //        savePoint = "2";
-                                //SaveGame(savePoint, characterFilePath, playerName, playerHealth, playerAttack, playerEXP);
-                            
+  
                         
                     }
                 }
