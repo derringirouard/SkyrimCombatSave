@@ -27,7 +27,13 @@ namespace SkyrimCombat
                 int numberOfPotions = Convert.ToInt32(playerInfo[6]);
                 Random random = new Random();
                 int nextEnemyInt = random.Next(0, 100);
-                if (nextEnemyInt <= 25)
+                if (nextEnemyInt < 10)
+                {
+                    Console.WriteLine("You walk around for some time and stumble across a chest!\nYou find a potion inside.");
+                    numberOfPotions++;
+                    UpdatePlayerInfo(characterFilePath, playerName, playerMaxHealth, playerHealth, playerAttack, playerEXP, savePoint, numberOfPotions);
+                }
+                else if (nextEnemyInt >= 10 && nextEnemyInt <25)
                 {
                     SkyrimCombatSave.Enemy.Enemy enemy = new SkyrimCombatSave.Enemy.Wolf();
                     CombatManager(characterFilePath, flee, playerEXP, savePoint, enemy, playerMaxHealth, numberOfPotions);
@@ -55,6 +61,12 @@ namespace SkyrimCombat
                 bool goodData = false;
                 while (goodData == false)
                 {
+                    playerName = playerInfo[0];
+                    playerHealth = Convert.ToInt32(playerInfo[2]);
+                    playerAttack = Convert.ToInt32(playerInfo[3]);
+                    playerEXP = Convert.ToInt32(playerInfo[5]);
+                    playerMaxHealth = Convert.ToInt32(playerInfo[1]);
+                    numberOfPotions = Convert.ToInt32(playerInfo[6]);
                     Console.Clear();
                     Console.WriteLine("Do you want to keep fighting? (y/n)");
                     action = Console.ReadLine().ToLower();
@@ -251,8 +263,8 @@ namespace SkyrimCombat
 
         static void Main(string[] args)
         {
-            string filePath = @"C:\Users\Node5600X\source\repos\SkyrimCombatSave\EnemyData.txt"; //Set file path of enemy data
-            string characterFilePath = @"C:\Users\Node5600X\source\repos\SkyrimCombatSave\CharacterData.txt";
+            string filePath = @"C:\Users\Traffic\Documents\Git\derringirouard\SkyrimCombatSave\EnemyData.txt"; //Set file path of enemy data
+            string characterFilePath = @"C:\Users\Traffic\Documents\Git\derringirouard\SkyrimCombatSave\CharacterData.txt";
             string enemyID = "1)"; //Initialize variable to use to search EnemyData.txt for the enemy to battle
             bool flee = false; //Variable used in CombatManager
             string action = string.Empty; //Variable used to hold player input
@@ -310,10 +322,19 @@ namespace SkyrimCombat
                 Console.Clear();
                 Console.WriteLine("What's your characters name?");
                 string characterName = Console.ReadLine();
+                if (characterName == "Renee")
+                {
+                    File.WriteAllText(characterFilePath, string.Empty);
+                    List<string> list = new List<string>();
+                    list.Add(characterName + ",500,500,50,0,0,5");
+                    File.WriteAllLines(characterFilePath, list);
+                }
+                else{ 
                 File.WriteAllText(characterFilePath, string.Empty);
                 List<string> list = new List<string>();
                 list.Add(characterName + ",100,100,15,0,0,0");
                 File.WriteAllLines(characterFilePath, list);
+                }
                 foreach (string line in System.IO.File.ReadLines(characterFilePath))
                 {
                     playerInfo = line.Split(",").ToList();
@@ -478,8 +499,9 @@ namespace SkyrimCombat
                         }
                         else if (action == "3")
                         {
-                            Console.WriteLine("You leave the city and are eaten by a dragon.");
-                            Environment.Exit(0);
+                            Console.WriteLine("You leave the city."); 
+                            RandomEncounter(savePoint, characterFilePath, flee, action);
+                            savePoint = "2";
                         }
                     }
                     else if (action == "3")
@@ -493,11 +515,12 @@ namespace SkyrimCombat
                         enemyID = "Nazeem";
                         SkyrimCombatSave.Enemy.Enemy enemy = new SkyrimCombatSave.Enemy.Nazeem();
                         CombatManager(characterFilePath, flee, playerEXP, savePoint, enemy, playerMaxHealth, numberOfPotions);
-                        Console.WriteLine("Do you want to find a place to rest? (y/n)";
+                        Console.WriteLine("Do you want to find a place to rest? (y/n)");
                         action = Console.ReadLine();
-                        if(action == y)
+                        if(action == "y")
                         {
-
+                            Console.WriteLine("You look around the city adn find an inn. You rest for the night and wake up feeling well rested.");
+                            playerHealth = playerMaxHealth;
                         }
                     }
                     else if (action == "4")
